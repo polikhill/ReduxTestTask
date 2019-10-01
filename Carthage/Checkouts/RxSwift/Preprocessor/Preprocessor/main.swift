@@ -8,13 +8,13 @@
 
 import Foundation
 
-if Process.argc != 3 {
+if CommandLine.argc != 3 {
     print("./Preprocessor <source-files-root> <derived-data> ")
     exit(-1)
 }
 
-let sourceFilesRoot = Process.arguments[1]
-let derivedData = Process.arguments[2]
+let sourceFilesRoot = CommandLine.arguments[1]
+let derivedData = CommandLine.arguments[2]
 
 let fileManager = FileManager()
 
@@ -47,7 +47,7 @@ func processFile(path: String, outputPath: String) -> String {
         let suffix = codePlusSuffixSeparated[1]
         
         if code.hasPrefix("=") {
-            functionContentComponents.append("components.append(String(\(code.substring(from: code.index(after: code.startIndex)))))\n")
+            functionContentComponents.append("components.append(String(\(String(code[code.index(after: code.startIndex) ..< code.endIndex]))))\n")
         }
         else {
             functionContentComponents.append("\(code)\n")
@@ -64,15 +64,15 @@ func processFile(path: String, outputPath: String) -> String {
 func runCommand(path: String) {
     _ = ProcessInfo().processIdentifier
     
-    let task = Task()
-    task.launchPath = "/bin/bash"
-    task.arguments = ["-c", "xcrun swift \"\(path)\""]
+    let process = Process()
+    process.launchPath = "/bin/bash"
+    process.arguments = ["-c", "xcrun swift \"\(path)\""]
+
+    process.launch()
     
-    task.launch()
+    process.waitUntilExit()
     
-    task.waitUntilExit()
-    
-    if task.terminationReason != Task.TerminationReason.exit {
+    if process.terminationReason != .exit {
         exit(-1)
     }
 }
@@ -82,7 +82,7 @@ let files = try fileManager.subpathsOfDirectory(atPath: sourceFilesRoot)
 var generateAllFiles = ["// Generated code\n", "import Foundation\n"]
 
 for file in files {
-    if ((file as NSString).pathExtension ?? "") != "tt" {
+    if ((file as NSString).pathExtension) != "tt" {
         continue
     }
     
@@ -90,7 +90,7 @@ for file in files {
     
     let path = (sourceFilesRoot as NSString).appendingPathComponent(file as String)
     let endIndex = path.index(before: path.index(before: path.index(before: path.endIndex)))
-    let outputPath = path.substring(to: endIndex) + ".swift"
+    let outputPath = String(path[path.startIndex ..<  endIndex]) + ".swift"
     
     generateAllFiles.append("_ = { () -> Void in\n\(processFile(path: path, outputPath: outputPath))\n}()\n")
 }

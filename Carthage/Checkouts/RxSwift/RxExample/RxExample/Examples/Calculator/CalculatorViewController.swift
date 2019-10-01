@@ -7,11 +7,8 @@
 //
 
 import UIKit
-#if !RX_NO_MODULE
 import RxSwift
 import RxCocoa
-#endif
-
 
 class CalculatorViewController: ViewController {
 
@@ -42,71 +39,59 @@ class CalculatorViewController: ViewController {
     @IBOutlet weak var nineButton: UIButton!
     
     override func viewDidLoad() {
-        let commands:[Observable<Action>] = [
-            allClearButton.rx.tap.map { _ in .clear },
-            
-            changeSignButton.rx.tap.map { _ in .changeSign },
-            percentButton.rx.tap.map { _ in .percent },
-            
-            divideButton.rx.tap.map { _ in .operation(.division) },
-            multiplyButton.rx.tap.map { _ in .operation(.multiplication) },
-            minusButton.rx.tap.map { _ in .operation(.subtraction) },
-            plusButton.rx.tap.map { _ in .operation(.addition) },
-            
-            equalButton.rx.tap.map { _ in .equal },
-            
-            dotButton.rx.tap.map { _ in  .addDot },
-            
-            zeroButton.rx.tap.map { _ in .addNumber("0") },
-            oneButton.rx.tap.map { _ in .addNumber("1") },
-            twoButton.rx.tap.map { _ in .addNumber("2") },
-            threeButton.rx.tap.map { _ in .addNumber("3") },
-            fourButton.rx.tap.map { _ in .addNumber("4") },
-            fiveButton.rx.tap.map { _ in .addNumber("5") },
-            sixButton.rx.tap.map { _ in .addNumber("6") },
-            sevenButton.rx.tap.map { _ in .addNumber("7") },
-            eightButton.rx.tap.map { _ in .addNumber("8") },
-            nineButton.rx.tap.map { _ in .addNumber("9") }
-        ]
-        
-        Observable.from(commands)
-            .merge()
-            .scan(CalculatorState.CLEAR_STATE) { a, x in
-                return a.tranformState(x)
-            }
-            .debug("debugging")
-            .subscribe(onNext: { [weak self] calState in
-                self?.resultLabel.text = calState.inScreen
-                switch calState.action {
-                case .operation(let operation):
-                    switch operation {
-                    case .addition:
-                        self?.lastSignLabel.text = "+"
-                    case .subtraction:
-                        self?.lastSignLabel.text = "-"
-                    case .multiplication:
-                        self?.lastSignLabel.text = "x"
-                    case .division:
-                        self?.lastSignLabel.text = "/"
-                    }
-                default:
-                    self?.lastSignLabel.text = ""
-                }
-            })
-            .addDisposableTo(disposeBag)
-    }
-    
-//swifts string api sucks
+        typealias FeedbackLoop = (ObservableSchedulerContext<CalculatorState>) -> Observable<CalculatorCommand>
 
-    func prettyFormat(str: String) -> String {
-        if str.hasSuffix(".0") {
-//            return str[str.startIndex..<str.endIndex.pre]
+        let uiFeedback: FeedbackLoop = bind(self) { this, state in
+            let subscriptions = [
+                state.map { $0.screen }.bind(to: this.resultLabel.rx.text),
+                state.map { $0.sign }.bind(to: this.lastSignLabel.rx.text)
+            ]
+
+            let events: [Observable<CalculatorCommand>] = [
+                    this.allClearButton.rx.tap.map { _ in .clear },
+
+                    this.changeSignButton.rx.tap.map { _ in .changeSign },
+                    this.percentButton.rx.tap.map { _ in .percent },
+
+                    this.divideButton.rx.tap.map { _ in .operation(.division) },
+                    this.multiplyButton.rx.tap.map { _ in .operation(.multiplication) },
+                    this.minusButton.rx.tap.map { _ in .operation(.subtraction) },
+                    this.plusButton.rx.tap.map { _ in .operation(.addition) },
+
+                    this.equalButton.rx.tap.map { _ in .equal },
+
+                    this.dotButton.rx.tap.map { _ in  .addDot },
+
+                    this.zeroButton.rx.tap.map { _ in .addNumber("0") },
+                    this.oneButton.rx.tap.map { _ in .addNumber("1") },
+                    this.twoButton.rx.tap.map { _ in .addNumber("2") },
+                    this.threeButton.rx.tap.map { _ in .addNumber("3") },
+                    this.fourButton.rx.tap.map { _ in .addNumber("4") },
+                    this.fiveButton.rx.tap.map { _ in .addNumber("5") },
+                    this.sixButton.rx.tap.map { _ in .addNumber("6") },
+                    this.sevenButton.rx.tap.map { _ in .addNumber("7") },
+                    this.eightButton.rx.tap.map { _ in .addNumber("8") },
+                    this.nineButton.rx.tap.map { _ in .addNumber("9") }
+                ]
+
+            return Bindings(subscriptions: subscriptions, events: events)
         }
-        return str
+        
+        Observable.system(
+            initialState: CalculatorState.initial,
+            reduce: CalculatorState.reduce,
+            scheduler: MainScheduler.instance,
+            scheduledFeedback: uiFeedback
+        )
+            .subscribe()
+            .disposed(by: disposeBag)
+    }
+
+    func formatResult(_ result: String) -> String {
+        if result.hasSuffix(".0") {
+            return String(result[result.startIndex ..< result.index(result.endIndex, offsetBy: -2)])
+        } else {
+            return result
+        }
     }
 }
-
-
-
-
-

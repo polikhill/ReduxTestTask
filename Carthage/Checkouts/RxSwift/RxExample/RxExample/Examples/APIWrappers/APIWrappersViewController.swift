@@ -8,10 +8,8 @@
 
 import UIKit
 import CoreLocation
-#if !RX_NO_MODULE
 import RxSwift
 import RxCocoa
-#endif
 
 extension UILabel {
     open override var accessibilityValue: String! {
@@ -46,12 +44,14 @@ class APIWrappersViewController: ViewController {
     @IBOutlet weak var slider: UISlider!
 
     @IBOutlet weak var textField: UITextField!
+    @IBOutlet weak var textField2: UITextField!
 
     @IBOutlet weak var datePicker: UIDatePicker!
 
     @IBOutlet weak var mypan: UIPanGestureRecognizer!
 
     @IBOutlet weak var textView: UITextView!
+    @IBOutlet weak var textView2: UITextView!
 
     let manager = CLLocationManager()
 
@@ -66,43 +66,38 @@ class APIWrappersViewController: ViewController {
             .subscribe(onNext: { [weak self] x in
                 self?.debug("UIBarButtonItem Tapped")
             })
-            .addDisposableTo(disposeBag)
+            .disposed(by: disposeBag)
 
         // MARK: UISegmentedControl
 
         // also test two way binding
-        let segmentedValue = Variable(0)
+        let segmentedValue = BehaviorRelay(value: 0)
         _ = segmentedControl.rx.value <-> segmentedValue
 
         segmentedValue.asObservable()
             .subscribe(onNext: { [weak self] x in
                 self?.debug("UISegmentedControl value \(x)")
             })
-            .addDisposableTo(disposeBag)
+            .disposed(by: disposeBag)
 
 
         // MARK: UISwitch
 
-        /*
         // also test two way binding
-        let switchValue = Variable(true)
-        /***⚠️Unlike other controls, Apple is reusing instances of UISwitch or a there is a leak,
-        so underlying observable sequence won't complete when nothing holds a strong reference
-        to UISwitch.⚠️***/
-        (switcher.rx.value <-> switchValue).addDisposableTo(disposeBag)
+        let switchValue = BehaviorRelay(value: true)
+        _ = switcher.rx.value <-> switchValue
 
         switchValue.asObservable()
             .subscribe(onNext: { [weak self] x in
                 self?.debug("UISwitch value \(x)")
             })
-            .addDisposableTo(disposeBag)
+            .disposed(by: disposeBag)
 
         // MARK: UIActivityIndicatorView
 
         switcher.rx.value
-            .bindTo(activityIndicator.rx.animating)
-            .addDisposableTo(disposeBag)
-        */
+            .bind(to: activityIndicator.rx.isAnimating)
+            .disposed(by: disposeBag)
 
         // MARK: UIButton
 
@@ -110,26 +105,26 @@ class APIWrappersViewController: ViewController {
             .subscribe(onNext: { [weak self] x in
                 self?.debug("UIButton Tapped")
             })
-            .addDisposableTo(disposeBag)
+            .disposed(by: disposeBag)
 
 
         // MARK: UISlider
 
         // also test two way binding
-        let sliderValue = Variable<Float>(1.0)
+        let sliderValue = BehaviorRelay<Float>(value: 1.0)
         _ = slider.rx.value <-> sliderValue
 
         sliderValue.asObservable()
             .subscribe(onNext: { [weak self] x in
                 self?.debug("UISlider value \(x)")
             })
-            .addDisposableTo(disposeBag)
+            .disposed(by: disposeBag)
 
 
         // MARK: UIDatePicker
 
         // also test two way binding
-        let dateValue = Variable(Date(timeIntervalSince1970: 0))
+        let dateValue = BehaviorRelay(value: Date(timeIntervalSince1970: 0))
         _ = datePicker.rx.date <-> dateValue
 
 
@@ -137,65 +132,85 @@ class APIWrappersViewController: ViewController {
             .subscribe(onNext: { [weak self] x in
                 self?.debug("UIDatePicker date \(x)")
             })
-            .addDisposableTo(disposeBag)
+            .disposed(by: disposeBag)
 
 
         // MARK: UITextField
 
-        // also test two way binding
-        let textValue = Variable("")
-        _ = textField.rx.textInput <-> textValue
+        // because of leak in ios 11.2
+        //
+        // final class UITextFieldSubclass: UITextField { deinit { print("never called")  } }
+        // let textField = UITextFieldSubclass(frame: .zero)
+        if #available(iOS 11.2, *) {
+            // also test two way binding
+            let textValue = BehaviorRelay(value: "")
+            _ = textField.rx.textInput <-> textValue
 
-        textValue.asObservable()
-            .subscribe(onNext: { [weak self] x in
-                self?.debug("UITextField text \(x)")
-            })
-            .addDisposableTo(disposeBag)
+            textValue.asObservable()
+                .subscribe(onNext: { [weak self] x in
+                    self?.debug("UITextField text \(x)")
+                })
+                .disposed(by: disposeBag)
 
+            let attributedTextValue = BehaviorRelay<NSAttributedString?>(value: NSAttributedString(string: ""))
+            _ = textField2.rx.attributedText <-> attributedTextValue
+
+            attributedTextValue.asObservable()
+                .subscribe(onNext: { [weak self] x in
+                    self?.debug("UITextField attributedText \(x?.description ?? "")")
+                })
+                .disposed(by: disposeBag)
+        }
 
         // MARK: UIGestureRecognizer
 
         mypan.rx.event
             .subscribe(onNext: { [weak self] x in
-                self?.debug("UIGestureRecognizer event \(x.state)")
+                self?.debug("UIGestureRecognizer event \(x.state.rawValue)")
             })
-            .addDisposableTo(disposeBag)
+            .disposed(by: disposeBag)
 
 
         // MARK: UITextView
 
         // also test two way binding
-        let textViewValue = Variable("")
+        let textViewValue = BehaviorRelay(value: "")
         _ = textView.rx.textInput <-> textViewValue
 
         textViewValue.asObservable()
             .subscribe(onNext: { [weak self] x in
                 self?.debug("UITextView text \(x)")
             })
-            .addDisposableTo(disposeBag)
+            .disposed(by: disposeBag)
+
+        let attributedTextViewValue = BehaviorRelay<NSAttributedString?>(value: NSAttributedString(string: ""))
+        _ = textView2.rx.attributedText <-> attributedTextViewValue
+
+        attributedTextViewValue.asObservable()
+            .subscribe(onNext: { [weak self] x in
+                self?.debug("UITextView attributedText \(x?.description ?? "")")
+            })
+            .disposed(by: disposeBag)
 
         // MARK: CLLocationManager
-
-        #if !RX_NO_MODULE
         manager.requestWhenInUseAuthorization()
-        #endif
 
         manager.rx.didUpdateLocations
             .subscribe(onNext: { x in
-                print("rx_didUpdateLocations \(x)")
+                print("rx.didUpdateLocations \(x)")
             })
-            .addDisposableTo(disposeBag)
+            .disposed(by: disposeBag)
 
         _ = manager.rx.didFailWithError
             .subscribe(onNext: { x in
-                print("rx_didFailWithError \(x)")
+                print("rx.didFailWithError \(x)")
             })
         
         manager.rx.didChangeAuthorizationStatus
             .subscribe(onNext: { status in
                 print("Authorization status \(status)")
             })
-            .addDisposableTo(disposeBag)
+            .disposed(by: disposeBag)
         
         manager.startUpdatingLocation()
 

@@ -1,45 +1,38 @@
 //
 //  RunLoopLock.swift
-//  Rx
+//  RxBlocking
 //
 //  Created by Krunoslav Zaher on 11/5/15.
 //  Copyright © 2015 Krunoslav Zaher. All rights reserved.
 //
 
-import Foundation
-#if !RX_NO_MODULE
-    import RxSwift
-#endif
+import CoreFoundation
 
-typealias AtomicInt = Int32
+import RxSwift
 
 #if os(Linux)
-  func AtomicIncrement(increment: UnsafeMutablePointer<AtomicInt>) -> AtomicInt {
-      increment.memory = increment.memory + 1
-      return increment.memory
-  }
-
-  func AtomicDecrement(increment: UnsafeMutablePointer<AtomicInt>) -> AtomicInt {
-      increment.memory = increment.memory - 1
-      return increment.memory
-  }
+    import Foundation
+    let runLoopMode: RunLoopMode = RunLoopMode.defaultRunLoopMode
+    let runLoopModeRaw: CFString = unsafeBitCast(runLoopMode.rawValue._bridgeToObjectiveC(), to: CFString.self)
 #else
-  let AtomicIncrement = OSAtomicIncrement32
-  let AtomicDecrement = OSAtomicDecrement32
+    let runLoopMode: CFRunLoopMode = CFRunLoopMode.defaultMode
+    let runLoopModeRaw = runLoopMode.rawValue
 #endif
 
-class RunLoopLock {
-    let currentRunLoop: CFRunLoop
+final class RunLoopLock {
+    let _currentRunLoop: CFRunLoop
 
-    var calledRun: AtomicInt = 0
-    var calledStop: AtomicInt = 0
+    let _calledRun = AtomicInt(0)
+    let _calledStop = AtomicInt(0)
+    var _timeout: RxTimeInterval?
 
-    init() {
-        currentRunLoop = CFRunLoopGetCurrent()
+    init(timeout: RxTimeInterval?) {
+        self._timeout = timeout
+        self._currentRunLoop = CFRunLoopGetCurrent()
     }
 
-    func dispatch(_ action: @escaping () -> ()) {
-        CFRunLoopPerformBlock(currentRunLoop, CFRunLoopMode.defaultMode.rawValue) {
+    func dispatch(_ action: @escaping () -> Void) {
+        CFRunLoopPerformBlock(self._currentRunLoop, runLoopModeRaw) {
             if CurrentThreadScheduler.isScheduleRequired {
                 _ = CurrentThreadScheduler.instance.schedule(()) { _ in
                     action()
@@ -50,23 +43,54 @@ class RunLoopLock {
                 action()
             }
         }
-        CFRunLoopWakeUp(currentRunLoop)
+        CFRunLoopWakeUp(self._currentRunLoop)
     }
 
     func stop() {
-        if AtomicIncrement(&calledStop) != 1 {
+        if decrement(self._calledStop) > 1 {
             return
         }
-        CFRunLoopPerformBlock(currentRunLoop, CFRunLoopMode.defaultMode.rawValue) {
-            CFRunLoopStop(self.currentRunLoop)
+        CFRunLoopPerformBlock(self._currentRunLoop, runLoopModeRaw) {
+            CFRunLoopStop(self._currentRunLoop)
         }
-        CFRunLoopWakeUp(currentRunLoop)
+        CFRunLoopWakeUp(self._currentRunLoop)
     }
 
-    func run() {
-        if AtomicIncrement(&calledRun) != 1 {
+    func run() throws {
+        if increment(self._calledRun) != 0 {
             fatalError("Run can be only called once")
         }
-        CFRunLoopRun()
+        if let timeout = self._timeout {
+            #if os(Linux)
+                switch Int(CFRunLoopRunInMode(runLoopModeRaw, timeout, false)) {
+                case kCFRunLoopRunFinished:
+                    return
+                case kCFRunLoopRunHandledSource:
+                    return
+                case kCFRunLoopRunStopped:
+                    return
+                case kCFRunLoopRunTimedOut:
+                    throw RxError.timeout
+                default:
+                    fatalError("This failed because `CFRunLoopRunResult` wasn't bridged to Swift.")
+                }
+            #else
+                switch CFRunLoopRunInMode(runLoopMode, timeout, false) {
+                case .finished:
+                    return
+                case .handledSource:
+                    return
+                case .stopped:
+                    return
+                case .timedOut:
+                    throw RxError.timeout
+                default:
+                    return
+                }
+            #endif
+        }
+        else {
+            CFRunLoopRun()
+        }
     }
 }

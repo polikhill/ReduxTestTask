@@ -8,11 +8,8 @@
 
 #if os(iOS) || os(tvOS)
 
-import Foundation
 import UIKit
-#if !RX_NO_MODULE
 import RxSwift
-#endif
 
 // objc monkey business
 class _RxCollectionViewReactiveArrayDataSource
@@ -46,12 +43,12 @@ class RxCollectionViewReactiveArrayDataSourceSequenceWrapper<S: Sequence>
     , RxCollectionViewDataSourceType {
     typealias Element = S
 
-    override init(cellFactory: CellFactory) {
+    override init(cellFactory: @escaping CellFactory) {
         super.init(cellFactory: cellFactory)
     }
     
     func collectionView(_ collectionView: UICollectionView, observedEvent: Event<S>) {
-        UIBindingObserver(UIElement: self) { collectionViewDataSource, sectionModels in
+        Binder(self) { collectionViewDataSource, sectionModels in
             let sections = Array(sectionModels)
             collectionViewDataSource.collectionView(collectionView, observedElements: sections)
         }.on(observedEvent)
@@ -66,13 +63,13 @@ class RxCollectionViewReactiveArrayDataSource<Element>
     
     typealias CellFactory = (UICollectionView, Int, Element) -> UICollectionViewCell
     
-    var itemModels: [Element]? = nil
+    var itemModels: [Element]?
     
     func modelAtIndex(_ index: Int) -> Element? {
         return itemModels?[index]
     }
 
-    func model(_ indexPath: IndexPath) throws -> Any {
+    func model(at indexPath: IndexPath) throws -> Any {
         precondition(indexPath.section == 0)
         guard let item = itemModels?[indexPath.item] else {
             throw RxCocoaError.itemsNotYetBound(object: self)
@@ -82,7 +79,7 @@ class RxCollectionViewReactiveArrayDataSource<Element>
     
     var cellFactory: CellFactory
     
-    init(cellFactory: CellFactory) {
+    init(cellFactory: @escaping CellFactory) {
         self.cellFactory = cellFactory
     }
     
@@ -102,6 +99,9 @@ class RxCollectionViewReactiveArrayDataSource<Element>
         self.itemModels = observedElements
         
         collectionView.reloadData()
+
+        // workaround for http://stackoverflow.com/questions/39867325/ios-10-bug-uicollectionview-received-layout-attributes-for-a-cell-with-an-index
+        collectionView.collectionViewLayout.invalidateLayout()
     }
 }
 

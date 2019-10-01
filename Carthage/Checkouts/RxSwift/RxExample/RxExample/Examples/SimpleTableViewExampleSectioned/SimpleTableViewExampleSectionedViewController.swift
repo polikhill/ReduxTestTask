@@ -6,19 +6,25 @@
 //  Copyright © 2015 Krunoslav Zaher. All rights reserved.
 //
 
-import Foundation
 import UIKit
-#if !RX_NO_MODULE
 import RxSwift
 import RxCocoa
-#endif
 
 class SimpleTableViewExampleSectionedViewController
     : ViewController
     , UITableViewDelegate {
     @IBOutlet weak var tableView: UITableView!
 
-    let dataSource = RxTableViewSectionedReloadDataSource<SectionModel<String, Double>>()
+    let dataSource = RxTableViewSectionedReloadDataSource<SectionModel<String, Double>>(
+        configureCell: { (_, tv, indexPath, element) in
+            let cell = tv.dequeueReusableCell(withIdentifier: "Cell")!
+            cell.textLabel?.text = "\(element) @ row \(indexPath.row)"
+            return cell
+        },
+        titleForHeaderInSection: { dataSource, sectionIndex in
+            return dataSource[sectionIndex].model
+        }
+    )
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -43,34 +49,32 @@ class SimpleTableViewExampleSectionedViewController
                 ])
             ])
 
-        dataSource.configureCell = { (_, tv, indexPath, element) in
-            let cell = tv.dequeueReusableCell(withIdentifier: "Cell")!
-            cell.textLabel?.text = "\(element) @ row \(indexPath.row)"
-            return cell
-        }
 
         items
-            .bindTo(tableView.rx.items(dataSource: dataSource))
-            .addDisposableTo(disposeBag)
+            .bind(to: tableView.rx.items(dataSource: dataSource))
+            .disposed(by: disposeBag)
 
         tableView.rx
             .itemSelected
             .map { indexPath in
                 return (indexPath, dataSource[indexPath])
             }
-            .subscribe(onNext: { indexPath, model in
-                DefaultWireframe.presentAlert("Tapped `\(model)` @ \(indexPath)")
+            .subscribe(onNext: { pair in
+                DefaultWireframe.presentAlert("Tapped `\(pair.1)` @ \(pair.0)")
             })
-            .addDisposableTo(disposeBag)
+            .disposed(by: disposeBag)
 
         tableView.rx
             .setDelegate(self)
-            .addDisposableTo(disposeBag)
+            .disposed(by: disposeBag)
     }
 
-    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-        let label = UILabel(frame: CGRect.zero)
-        label.text = dataSource.sectionAtIndex(section).model
-        return label
+    // to prevent swipe to delete behavior
+    func tableView(_ tableView: UITableView, editingStyleForRowAt indexPath: IndexPath) -> UITableViewCellEditingStyle {
+        return .none
+    }
+    
+    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        return 40
     }
 }

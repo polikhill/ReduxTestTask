@@ -6,20 +6,19 @@
 //  Copyright © 2015 Krunoslav Zaher. All rights reserved.
 //
 
-#if !RX_NO_MODULE
 import RxSwift
-#endif
-import Foundation
+
+import class Dispatch.DispatchQueue
 
 public enum ReachabilityStatus {
-    case Reachable(viaWiFi: Bool)
+    case reachable(viaWiFi: Bool)
     case unreachable
 }
 
 extension ReachabilityStatus {
     var reachable: Bool {
         switch self {
-        case .Reachable:
+        case .reachable:
             return true
         case .unreachable:
             return false
@@ -29,6 +28,10 @@ extension ReachabilityStatus {
 
 protocol ReachabilityService {
     var reachability: Observable<ReachabilityStatus> { get }
+}
+
+enum ReachabilityServiceError: Error {
+    case failedToCreate
 }
 
 class DefaultReachabilityService
@@ -43,7 +46,7 @@ class DefaultReachabilityService
     let _reachability: Reachability
 
     init() throws {
-        let reachabilityRef = try Reachability.reachabilityForInternetConnection()
+        guard let reachabilityRef = Reachability() else { throw ReachabilityServiceError.failedToCreate }
         let reachabilitySubject = BehaviorSubject<ReachabilityStatus>(value: .unreachable)
 
         // so main thread isn't blocked when reachability via WiFi is checked
@@ -51,7 +54,7 @@ class DefaultReachabilityService
 
         reachabilityRef.whenReachable = { reachability in
             backgroundQueue.async {
-                reachabilitySubject.on(.next(.Reachable(viaWiFi: reachabilityRef.isReachableViaWiFi())))
+                reachabilitySubject.on(.next(.reachable(viaWiFi: reachabilityRef.isReachableViaWiFi)))
             }
         }
 
@@ -76,8 +79,11 @@ extension ObservableConvertibleType {
         return self.asObservable()
             .catchError { (e) -> Observable<E> in
                 reachabilityService.reachability
+                    .skip(1)
                     .filter { $0.reachable }
-                    .flatMap { _ in Observable.error(e) }
+                    .flatMap { _ in
+                        Observable.error(e)
+                    }
                     .startWith(valueOnFailure)
             }
             .retry()

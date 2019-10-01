@@ -6,9 +6,8 @@
 //  Copyright © 2015 Krunoslav Zaher. All rights reserved.
 //
 
-import Foundation
 import RxSwift
-import RxTests
+import RxTest
 import RxCocoa
 
 /**
@@ -50,23 +49,23 @@ extension TestScheduler {
         let allExceptLast = timelines[0 ..< timelines.count - 1]
 
         return (allExceptLast.map { $0 + "|" } + [timelines.last!])
-            .filter { $0.characters.count > 0 }
+            .filter { $0.count > 0 }
             .map { timeline -> [Recorded<Event<T>>] in
                 let segments = timeline.components(separatedBy:"-")
                 let (time: _, events: events) = segments.reduce((time: 0, events: [RecordedEvent]())) { state, event in
-                    let tickIncrement = event.characters.count + 1
+                    let tickIncrement = event.count + 1
 
-                    if event.characters.count == 0 {
+                    if event.count == 0 {
                         return (state.time + tickIncrement, state.events)
                     }
 
                     if event == "#" {
-                        let errorEvent = RecordedEvent(time: state.time, event: Event<T>.error(NSError(domain: "Any error domain", code: -1, userInfo: nil)))
+                        let errorEvent = RecordedEvent(time: state.time, value: Event<T>.error(NSError(domain: "Any error domain", code: -1, userInfo: nil)))
                         return (state.time + tickIncrement, state.events + [errorEvent])
                     }
 
                     if event == "|" {
-                        let completed = RecordedEvent(time: state.time, event: Event<T>.completed)
+                        let completed = RecordedEvent(time: state.time, value: Event<T>.completed)
                         return (state.time + tickIncrement, state.events + [completed])
                     }
 
@@ -75,11 +74,11 @@ extension TestScheduler {
                             fatalError("Value with key \(event) not registered as value:\n\(values)\nor error:\n\(errors)")
                         }
 
-                        let nextEvent = RecordedEvent(time: state.time, event: Event<T>.error(error))
+                        let nextEvent = RecordedEvent(time: state.time, value: Event<T>.error(error))
                         return (state.time + tickIncrement, state.events + [nextEvent])
                     }
 
-                    let nextEvent = RecordedEvent(time: state.time, event: Event<T>.next(next))
+                    let nextEvent = RecordedEvent(time: state.time, value: Event<T>.next(next))
                     return (state.time + tickIncrement, state.events + [nextEvent])
                 }
 
@@ -98,8 +97,7 @@ extension TestScheduler {
     */
     func createDriver<T>(timeline: String, values: [String: T]) -> Driver<T> {
         return createObservable(timeline: timeline, values: values, errors: [:]).asDriver(onErrorRecover: { (error) -> Driver<T> in
-            fatalError("This can't error out")
-            return Driver.never()
+            genericFatal("This can't error out")
         })
     }
 
@@ -190,7 +188,7 @@ extension TestScheduler {
     */
     func record<O: ObservableConvertibleType>(source: O) -> TestableObserver<O.E> {
         let observer = self.createObserver(O.E.self)
-        let disposable = source.asObservable().bindTo(observer)
+        let disposable = source.asObservable().bind(to: observer)
         self.scheduleAt(100000) {
             disposable.dispose()
         }

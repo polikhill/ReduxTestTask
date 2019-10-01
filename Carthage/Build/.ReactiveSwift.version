@@ -1,30 +1,9 @@
 {
-  "Mac" : [
-    {
-      "name" : "ReactiveSwift",
-      "hash" : "b61d55a2fbfd0d480990f6af8be3cbf0e74dec43c98357781eeae27a05cc982a",
-      "swiftToolchainVersion" : "5.0.1 (swiftlang-1001.0.82.4 clang-1001.0.46.5)"
-    }
-  ],
-  "watchOS" : [
-    {
-      "name" : "ReactiveSwift",
-      "hash" : "43d145af7732cf5a81707fad2046b5c71d1cd892fb727a84ba27cf9c4e626c35",
-      "swiftToolchainVersion" : "5.0.1 (swiftlang-1001.0.82.4 clang-1001.0.46.5)"
-    }
-  ],
-  "tvOS" : [
-    {
-      "name" : "ReactiveSwift",
-      "hash" : "b3505b1e67425f4cc85d599a3f589e5ea325894c9d92450ae9183ca5a692bb03",
-      "swiftToolchainVersion" : "5.0.1 (swiftlang-1001.0.82.4 clang-1001.0.46.5)"
-    }
-  ],
   "commitish" : "5.0.1",
   "iOS" : [
     {
       "name" : "ReactiveSwift",
-      "hash" : "cb2f339c3b8c1612b33076f6842fdd7692b6e4391d1c47abadf1d47b5c91f225",
+      "hash" : "237c9dead27fe015e20b3cf39df98bc1f7733a75076bf8afd037bdfb3a0d2468",
       "swiftToolchainVersion" : "5.0.1 (swiftlang-1001.0.82.4 clang-1001.0.46.5)"
     }
   ]

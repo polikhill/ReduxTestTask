@@ -1,6 +1,6 @@
 //
 //  UIGestureRecognizer+Rx.swift
-//  Touches
+//  RxCocoa
 //
 //  Created by Carlos García on 10/6/15.
 //  Copyright © 2015 Krunoslav Zaher. All rights reserved.
@@ -9,13 +9,10 @@
 #if os(iOS) || os(tvOS)
 
 import UIKit
-#if !RX_NO_MODULE
 import RxSwift
-#endif
-
 
 // This should be only used from `MainScheduler`
-class GestureTarget<Recognizer: UIGestureRecognizer>: RxTarget {
+final class GestureTarget<Recognizer: UIGestureRecognizer>: RxTarget {
     typealias Callback = (Recognizer) -> Void
     
     let selector = #selector(ControlTarget.eventHandler(_:))
@@ -23,7 +20,7 @@ class GestureTarget<Recognizer: UIGestureRecognizer>: RxTarget {
     weak var gestureRecognizer: Recognizer?
     var callback: Callback?
     
-    init(_ gestureRecognizer: Recognizer, callback: Callback) {
+    init(_ gestureRecognizer: Recognizer, callback: @escaping Callback) {
         self.gestureRecognizer = gestureRecognizer
         self.callback = callback
         
@@ -37,7 +34,7 @@ class GestureTarget<Recognizer: UIGestureRecognizer>: RxTarget {
         }
     }
     
-    func eventHandler(_ sender: UIGestureRecognizer!) {
+    @objc func eventHandler(_ sender: UIGestureRecognizer) {
         if let callback = self.callback, let gestureRecognizer = self.gestureRecognizer {
             callback(gestureRecognizer)
         }
@@ -53,20 +50,17 @@ class GestureTarget<Recognizer: UIGestureRecognizer>: RxTarget {
 
 extension Reactive where Base: UIGestureRecognizer {
     
-    /**
-    Reactive wrapper for gesture recognizer events.
-    */
+    /// Reactive wrapper for gesture recognizer events.
     public var event: ControlEvent<Base> {
         let source: Observable<Base> = Observable.create { [weak control = self.base] observer in
-            MainScheduler.ensureExecutingOnScheduler()
+            MainScheduler.ensureRunningOnMainThread()
 
             guard let control = control else {
                 observer.on(.completed)
                 return Disposables.create()
             }
             
-            let observer = GestureTarget(control) {
-                control in
+            let observer = GestureTarget(control) { control in
                 observer.on(.next(control))
             }
             

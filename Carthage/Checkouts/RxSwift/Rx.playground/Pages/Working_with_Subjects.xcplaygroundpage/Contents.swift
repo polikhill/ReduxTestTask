@@ -1,7 +1,7 @@
 /*:
  > # IMPORTANT: To use **Rx.playground**:
  1. Open **Rx.xcworkspace**.
- 1. Build the **RxSwift-OSX** scheme (**Product** → **Build**).
+ 1. Build the **RxSwift-macOS** scheme (**Product** → **Build**).
  1. Open **Rx** playground in the **Project navigator**.
  1. Show the Debug Area (**View** → **Debug Area** → **Show Debug Area**).
  ----
@@ -38,11 +38,11 @@ example("PublishSubject") {
     let disposeBag = DisposeBag()
     let subject = PublishSubject<String>()
     
-    subject.addObserver("1").addDisposableTo(disposeBag)
+    subject.addObserver("1").disposed(by: disposeBag)
     subject.onNext("🐶")
     subject.onNext("🐱")
     
-    subject.addObserver("2").addDisposableTo(disposeBag)
+    subject.addObserver("2").disposed(by: disposeBag)
     subject.onNext("🅰️")
     subject.onNext("🅱️")
 }
@@ -57,11 +57,11 @@ example("ReplaySubject") {
     let disposeBag = DisposeBag()
     let subject = ReplaySubject<String>.create(bufferSize: 1)
     
-    subject.addObserver("1").addDisposableTo(disposeBag)
+    subject.addObserver("1").disposed(by: disposeBag)
     subject.onNext("🐶")
     subject.onNext("🐱")
     
-    subject.addObserver("2").addDisposableTo(disposeBag)
+    subject.addObserver("2").disposed(by: disposeBag)
     subject.onNext("🅰️")
     subject.onNext("🅱️")
 }
@@ -75,36 +75,20 @@ example("BehaviorSubject") {
     let disposeBag = DisposeBag()
     let subject = BehaviorSubject(value: "🔴")
     
-    subject.addObserver("1").addDisposableTo(disposeBag)
+    subject.addObserver("1").disposed(by: disposeBag)
     subject.onNext("🐶")
     subject.onNext("🐱")
     
-    subject.addObserver("2").addDisposableTo(disposeBag)
+    subject.addObserver("2").disposed(by: disposeBag)
     subject.onNext("🅰️")
     subject.onNext("🅱️")
     
-    subject.addObserver("3").addDisposableTo(disposeBag)
+    subject.addObserver("3").disposed(by: disposeBag)
     subject.onNext("🍐")
     subject.onNext("🍊")
 }
 /*:
  > Notice what's missing in these previous examples? A Completed event. `PublishSubject`, `ReplaySubject`, and `BehaviorSubject` do not automatically emit Completed events when they are about to be disposed of.
- ----
- ## Variable
- Wraps a `BehaviorSubject`, so it will emit the most recent (or initial) value to new subscribers. And `Variable` also maintains current value state. `Variable` will never emit an Error event. However, it will automatically emit a Completed event and terminate on `deinit`.
 */
-example("Variable") {
-    let disposeBag = DisposeBag()
-    let variable = Variable("🔴")
-    
-    variable.asObservable().addObserver("1").addDisposableTo(disposeBag)
-    variable.value = "🐶"
-    variable.value = "🐱"
-    
-    variable.asObservable().addObserver("2").addDisposableTo(disposeBag)
-    variable.value = "🅰️"
-    variable.value = "🅱️"
-}
-//:  > Call `asObservable()` on a `Variable` instance in order to access its underlying `BehaviorSubject` sequence. `Variable`s do not implement the `on` operator (or, e.g., `onNext(_:)`), but instead expose a `value` property that can be used to get the current value, and also set a new value. Setting a new value will also add that value onto its underlying `BehaviorSubject` sequence.
 
 //: [Next](@next) - [Table of Contents](Table_of_Contents)

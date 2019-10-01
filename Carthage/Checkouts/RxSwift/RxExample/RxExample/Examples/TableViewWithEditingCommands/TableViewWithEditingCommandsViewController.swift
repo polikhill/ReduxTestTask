@@ -7,10 +7,8 @@
 //
 
 import UIKit
-#if !RX_NO_MODULE
 import RxSwift
 import RxCocoa
-#endif
 
 /**
 Another way to do "MVVM". There are different ideas what does MVVM mean depending on your background.
@@ -25,18 +23,18 @@ struct TableViewEditingCommandsViewModel {
     let favoriteUsers: [User]
     let users: [User]
 
-    func executeCommand(_ command: TableViewEditingCommand) -> TableViewEditingCommandsViewModel {
+    static func executeCommand(state: TableViewEditingCommandsViewModel, _ command: TableViewEditingCommand) -> TableViewEditingCommandsViewModel {
         switch command {
         case let .setUsers(users):
-            return TableViewEditingCommandsViewModel(favoriteUsers: favoriteUsers, users: users)
+            return TableViewEditingCommandsViewModel(favoriteUsers: state.favoriteUsers, users: users)
         case let .setFavoriteUsers(favoriteUsers):
-            return TableViewEditingCommandsViewModel(favoriteUsers: favoriteUsers, users: users)
+            return TableViewEditingCommandsViewModel(favoriteUsers: favoriteUsers, users: state.users)
         case let .deleteUser(indexPath):
-            var all = [self.favoriteUsers, self.users]
+            var all = [state.favoriteUsers, state.users]
             all[indexPath.section].remove(at: indexPath.row)
             return TableViewEditingCommandsViewModel(favoriteUsers: all[0], users: all[1])
         case let .moveUser(from, to):
-            var all = [self.favoriteUsers, self.users]
+            var all = [state.favoriteUsers, state.users]
             let user = all[from.section][from.row]
             all[from.section].remove(at: from.row)
             all[to.section].insert(user, at: to.row)
@@ -62,6 +60,8 @@ class TableViewWithEditingCommandsViewController: ViewController, UITableViewDel
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        typealias Feedback = (ObservableSchedulerContext<TableViewEditingCommandsViewModel>) -> Observable<TableViewEditingCommand>
+
         self.navigationItem.rightBarButtonItem = self.editButtonItem
 
         let superMan =  User(
@@ -76,54 +76,57 @@ class TableViewWithEditingCommandsViewController: ViewController, UITableViewDel
         )
 
         let loadFavoriteUsers = RandomUserAPI.sharedAPI
-                .getExampleUserResultSet()
-                .map(TableViewEditingCommand.setUsers)
+            .getExampleUserResultSet()
+            .map(TableViewEditingCommand.setUsers)
+            .catchErrorJustReturn(TableViewEditingCommand.setUsers(users: []))
 
         let initialLoadCommand = Observable.just(TableViewEditingCommand.setFavoriteUsers(favoriteUsers: [superMan, watMan]))
                 .concat(loadFavoriteUsers)
                 .observeOn(MainScheduler.instance)
 
-        let deleteUserCommand = tableView.rx.itemDeleted.map(TableViewEditingCommand.deleteUser)
-        let moveUserCommand = tableView
-            .rx.itemMoved
-            // This is needed because rx.itemMoved is being performed before delegate method is
-            // delegated to RxDataSource.
-            // This observeOn makes sure data is rebound after automatic move is performed in data source.
-            // This will be improved in RxSwift 3.0 when order will be inversed.
-            .observeOn(MainScheduler.asyncInstance)
-            .map(TableViewEditingCommand.moveUser)
+        let uiFeedback: Feedback = bind(self) { this, state in
+            let subscriptions = [
+                state.map {
+                        [
+                            SectionModel(model: "Favorite Users", items: $0.favoriteUsers),
+                            SectionModel(model: "Normal Users", items: $0.users)
+                        ]
+                    }
+                    .bind(to: this.tableView.rx.items(dataSource: this.dataSource)),
+                this.tableView.rx.itemSelected
+                    .withLatestFrom(state) { i, latestState in
+                        let all = [latestState.favoriteUsers, latestState.users]
+                        return all[i.section][i.row]
+                    }
+                    .subscribe(onNext: { [weak this] user in
+                        this?.showDetailsForUser(user)
+                    }),
+            ]
 
-        let initialState = TableViewEditingCommandsViewModel(favoriteUsers: [], users: [])
+            let events: [Observable<TableViewEditingCommand>] = [
 
-        let viewModel =  Observable.of(initialLoadCommand, deleteUserCommand, moveUserCommand)
-            .merge()
-            .scan(initialState) { $0.executeCommand($1) }
-            .shareReplay(1)
+                this.tableView.rx.itemDeleted.map(TableViewEditingCommand.deleteUser),
+                this.tableView .rx.itemMoved.map({ val in return TableViewEditingCommand.moveUser(from: val.0, to: val.1) })
+            ]
 
-        viewModel
-            .map {
-                [
-                    SectionModel(model: "Favorite Users", items: $0.favoriteUsers),
-                    SectionModel(model: "Normal Users", items: $0.users)
-                ]
-            }
-            .bindTo(tableView.rx.items(dataSource: dataSource))
-            .addDisposableTo(disposeBag)
+            return Bindings(subscriptions: subscriptions, events: events)
+        }
 
-        tableView.rx.itemSelected
-            .withLatestFrom(viewModel) { i, viewModel in
-                let all = [viewModel.favoriteUsers, viewModel.users]
-                return all[i.section][i.row]
-            }
-            .subscribe(onNext: { [weak self] user in
-                self?.showDetailsForUser(user)
-            })
-            .addDisposableTo(disposeBag)
+        let initialLoadFeedback: Feedback = { _ in initialLoadCommand }
+
+        Observable.system(
+            initialState: TableViewEditingCommandsViewModel(favoriteUsers: [], users: []),
+            reduce: TableViewEditingCommandsViewModel.executeCommand,
+            scheduler: MainScheduler.instance,
+            scheduledFeedback: uiFeedback, initialLoadFeedback
+        )
+            .subscribe()
+            .disposed(by: disposeBag)
 
         // customization using delegate
         // RxTableViewDelegateBridge will forward correct messages
         tableView.rx.setDelegate(self)
-            .addDisposableTo(disposeBag)
+            .disposed(by: disposeBag)
     }
 
     override func setEditing(_ editing: Bool, animated: Bool) {
@@ -134,7 +137,7 @@ class TableViewWithEditingCommandsViewController: ViewController, UITableViewDel
     // MARK: Table view delegate ;)
 
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-        let title = dataSource.sectionAtIndex(section)
+        let title = dataSource[section]
 
         let label = UILabel(frame: CGRect.zero)
         // hacky I know :)
@@ -153,7 +156,7 @@ class TableViewWithEditingCommandsViewController: ViewController, UITableViewDel
     // MARK: Navigation
 
     private func showDetailsForUser(_ user: User) {
-        let storyboard = UIStoryboard(name: "Main", bundle: Bundle(identifier: "RxExample-iOS"))
+        let storyboard = UIStoryboard(name: "TableViewWithEditingCommands", bundle: Bundle(identifier: "RxExample-iOS"))
         let viewController = storyboard.instantiateViewController(withIdentifier: "DetailViewController") as! DetailViewController
         viewController.user = user
         self.navigationController?.pushViewController(viewController, animated: true)
@@ -162,25 +165,22 @@ class TableViewWithEditingCommandsViewController: ViewController, UITableViewDel
     // MARK: Work over Variable
 
     static func configureDataSource() -> RxTableViewSectionedReloadDataSource<SectionModel<String, User>> {
-        let dataSource = RxTableViewSectionedReloadDataSource<SectionModel<String, User>>()
-
-        dataSource.configureCell = { (_, tv, ip, user: User) in
-            let cell = tv.dequeueReusableCell(withIdentifier: "Cell")!
-            cell.textLabel?.text = user.firstName + " " + user.lastName
-            return cell
-        }
-
-        dataSource.titleForHeaderInSection = { dataSource, sectionIndex in
-            return dataSource.sectionAtIndex(sectionIndex).model
-        }
-
-        dataSource.canEditRowAtIndexPath = { (ds, ip) in
-            return true
-        }
-
-        dataSource.canMoveRowAtIndexPath = { _ in
-            return true
-        }
+        let dataSource = RxTableViewSectionedReloadDataSource<SectionModel<String, User>>(
+            configureCell: { (_, tv, ip, user: User) in
+                let cell = tv.dequeueReusableCell(withIdentifier: "Cell")!
+                cell.textLabel?.text = user.firstName + " " + user.lastName
+                return cell
+            },
+            titleForHeaderInSection: { dataSource, sectionIndex in
+                return dataSource[sectionIndex].model
+            },
+            canEditRowAtIndexPath: { (ds, ip) in
+                return true
+            },
+            canMoveRowAtIndexPath: { _, _ in
+                return true
+            }
+        )
 
         return dataSource
     }

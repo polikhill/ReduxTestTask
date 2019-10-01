@@ -1,25 +1,24 @@
 //
 //  PrimitiveMockObserver.swift
-//  RxTests
+//  Tests
 //
 //  Created by Krunoslav Zaher on 6/4/15.
 //  Copyright © 2015 Krunoslav Zaher. All rights reserved.
 //
 
-import Foundation
 import RxSwift
-import RxTests
+import RxTest
 
-class PrimitiveMockObserver<ElementType> : ObserverType {
+final class PrimitiveMockObserver<ElementType> : ObserverType {
     typealias Element = ElementType
-    
-    var events: [Recorded<Event<Element>>]
-    
-    init() {
-        self.events = []
+
+    private let _events = Synchronized([Recorded<Event<Element>>]())
+
+    var events: [Recorded<Event<Element>>] {
+        return self._events.value
     }
     
     func on(_ event: Event<Element>) {
-        events.append(Recorded(time: 0, event: event))
+        self._events.mutate { $0.append(Recorded(time: 0, value: event)) }
     }
 }
