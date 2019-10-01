@@ -8,7 +8,7 @@
 
 import UIKit
 
-final class NewsCell: BaseTableViewCell {
+final class NewsCell: UITableViewCell {
 
     // MARK: - Private Properties
 
@@ -39,30 +39,30 @@ final class NewsCell: BaseTableViewCell {
 
     // MARK: - Public Methods
     
-    func configre(with article: Article) {
-        backgroundImageView.setImage(.url(article.image), placeholder: HelperFunctions.randomImage())
-        overlay.backgroundColor = .black(alpha: 0.5)
-
-        titleLabel.setAttributedTitle(
-            text: article.author, font: .subtitle(of: 13),
-            color: .white, lineHeight: 20, letterSpacing: -0.13,
-            alignment: .left
-        )
-        subtitleLabel.setAttributedTitle(
-            text: article.title, font: .title(of: 22),
-            color: .white, lineHeight: 26, letterSpacing: 0.28,
-            alignment: .left
-        )
-        subtitleLabel.numberOfLines = 0
-        
-        guard let date = article.publishDate else {
-            dateLabel.isHidden = true
-            return
-        }
-        dateLabel.setAttributedTitle(
-            text: TimeHelper.getString(fromDate: date, withFormat: .articleDate), font: .dateFont(of: 13),
-            color: .white, lineHeight: 15, letterSpacing: -0.16,
-            alignment: .right
-        )
-    }
+//    func configre(with article: Article) {
+//        backgroundImageView.setImage(.url(article.image), placeholder: HelperFunctions.randomImage())
+//        overlay.backgroundColor = .black(alpha: 0.5)
+//
+//        titleLabel.setAttributedTitle(
+//            text: article.author, font: .subtitle(of: 13),
+//            color: .white, lineHeight: 20, letterSpacing: -0.13,
+//            alignment: .left
+//        )
+//        subtitleLabel.setAttributedTitle(
+//            text: article.title, font: .title(of: 22),
+//            color: .white, lineHeight: 26, letterSpacing: 0.28,
+//            alignment: .left
+//        )
+//        subtitleLabel.numberOfLines = 0
+//        
+//        guard let date = article.publishDate else {
+//            dateLabel.isHidden = true
+//            return
+//        }
+//        dateLabel.setAttributedTitle(
+//            text: TimeHelper.getString(fromDate: date, withFormat: .articleDate), font: .dateFont(of: 13),
+//            color: .white, lineHeight: 15, letterSpacing: -0.16,
+//            alignment: .right
+//        )
+//    }
 }

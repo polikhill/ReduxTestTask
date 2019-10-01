@@ -13,6 +13,11 @@
 		DD2735822343520E00607035 /* NewsCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD2735802343520E00607035 /* NewsCell.swift */; };
 		DD2735832343520E00607035 /* NewsCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = DD2735812343520E00607035 /* NewsCell.xib */; };
 		DD2735862343524800607035 /* NewsListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD2735852343524800607035 /* NewsListViewController.swift */; };
+		DD99875523436EFD009593A1 /* Alamofire.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DD99875423436EFD009593A1 /* Alamofire.framework */; };
+		DDA1B4AD23436A13000FF73C /* RxRelay.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DDA1B4A823436A13000FF73C /* RxRelay.framework */; };
+		DDA1B4AE23436A13000FF73C /* RxCocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DDA1B4A923436A13000FF73C /* RxCocoa.framework */; };
+		DDA1B4AF23436A13000FF73C /* RxBlocking.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DDA1B4AA23436A13000FF73C /* RxBlocking.framework */; };
+		DDA1B4B023436A13000FF73C /* RxSwift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DDA1B4AB23436A13000FF73C /* RxSwift.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -24,6 +29,12 @@
 		DD2735802343520E00607035 /* NewsCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NewsCell.swift; sourceTree = "<group>"; };
 		DD2735812343520E00607035 /* NewsCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = NewsCell.xib; sourceTree = "<group>"; };
 		DD2735852343524800607035 /* NewsListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewsListViewController.swift; sourceTree = "<group>"; };
+		DD99875423436EFD009593A1 /* Alamofire.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Alamofire.framework; path = Carthage/Build/iOS/Alamofire.framework; sourceTree = "<group>"; };
+		DDA1B4A823436A13000FF73C /* RxRelay.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = RxRelay.framework; path = Carthage/Build/iOS/RxRelay.framework; sourceTree = "<group>"; };
+		DDA1B4A923436A13000FF73C /* RxCocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = RxCocoa.framework; path = Carthage/Build/iOS/RxCocoa.framework; sourceTree = "<group>"; };
+		DDA1B4AA23436A13000FF73C /* RxBlocking.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = RxBlocking.framework; path = Carthage/Build/iOS/RxBlocking.framework; sourceTree = "<group>"; };
+		DDA1B4AB23436A13000FF73C /* RxSwift.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = RxSwift.framework; path = Carthage/Build/iOS/RxSwift.framework; sourceTree = "<group>"; };
+		DDA1B4AC23436A13000FF73C /* RxTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = RxTest.framework; path = Carthage/Build/iOS/RxTest.framework; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -31,6 +42,11 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				DDA1B4AD23436A13000FF73C /* RxRelay.framework in Frameworks */,
+				DDA1B4AE23436A13000FF73C /* RxCocoa.framework in Frameworks */,
+				DDA1B4AF23436A13000FF73C /* RxBlocking.framework in Frameworks */,
+				DDA1B4B023436A13000FF73C /* RxSwift.framework in Frameworks */,
+				DD99875523436EFD009593A1 /* Alamofire.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -42,6 +58,7 @@
 			children = (
 				DD27356323434F5B00607035 /* ReduxTestTask */,
 				DD27356223434F5B00607035 /* Products */,
+				DDA1B4A723436A13000FF73C /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -139,6 +156,19 @@
 			path = NewsList;
 			sourceTree = "<group>";
 		};
+		DDA1B4A723436A13000FF73C /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				DD99875423436EFD009593A1 /* Alamofire.framework */,
+				DDA1B4AA23436A13000FF73C /* RxBlocking.framework */,
+				DDA1B4A923436A13000FF73C /* RxCocoa.framework */,
+				DDA1B4A823436A13000FF73C /* RxRelay.framework */,
+				DDA1B4AB23436A13000FF73C /* RxSwift.framework */,
+				DDA1B4AC23436A13000FF73C /* RxTest.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -149,6 +179,7 @@
 				DD27355D23434F5B00607035 /* Sources */,
 				DD27355E23434F5B00607035 /* Frameworks */,
 				DD27355F23434F5B00607035 /* Resources */,
+				DDA1B4A62343677C000FF73C /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -204,6 +235,36 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		DDA1B4A62343677C000FF73C /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"$(SRCROOT)/Carthage/Build/iOS/RxSwift.framework",
+				"$(SRCROOT)/Carthage/Build/iOS/RxBlocking.framework",
+				"$(SRCROOT)/Carthage/Build/iOS/RxRelay.framework",
+				"$(SRCROOT)/Carthage/Build/iOS/RxCocoa.framework",
+				"$(SRCROOT)/Carthage/Build/iOS/Alamofire.framework",
+			);
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(BUILT_PRODUCTS_DIR)/$(FRAMEWORKS_FOLDER_PATH)/RxSwift.framework",
+				"$(BUILT_PRODUCTS_DIR)/$(FRAMEWORKS_FOLDER_PATH)/RxCocoa.framework",
+				"$(BUILT_PRODUCTS_DIR)/$(FRAMEWORKS_FOLDER_PATH)/RxBlocking.framework",
+				"$(BUILT_PRODUCTS_DIR)/$(FRAMEWORKS_FOLDER_PATH)/RxRelay.framework",
+				"$(BUILT_PRODUCTS_DIR)/$(FRAMEWORKS_FOLDER_PATH)/Alamofire.framework",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "/usr/local/bin/carthage copy-frameworks\n";
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		DD27355D23434F5B00607035 /* Sources */ = {
@@ -352,7 +413,11 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 6QJD9S5LP3;
-				INFOPLIST_FILE = ReduxTestTask/Info.plist;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Carthage/Build/iOS",
+				);
+				INFOPLIST_FILE = "$(SRCROOT)/ReduxTestTask/Resources/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -360,7 +425,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.polina.ReduxTestTask;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Debug;
 		};
@@ -370,7 +435,11 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 6QJD9S5LP3;
-				INFOPLIST_FILE = ReduxTestTask/Info.plist;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Carthage/Build/iOS",
+				);
+				INFOPLIST_FILE = "$(SRCROOT)/ReduxTestTask/Resources/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -378,7 +447,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.polina.ReduxTestTask;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Release;
 		};
