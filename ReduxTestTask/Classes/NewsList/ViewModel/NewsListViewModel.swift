@@ -15,7 +15,8 @@ extension NewsList {
         
         struct Inputs {
             let viewWillAppear: Observable<Void>
-            let refresh: Observable<Void>
+            let pullToRefresh: Observable<Void>
+            let dismissError: Observable<Void>
         }
         
         struct Outputs {
@@ -29,14 +30,32 @@ extension NewsList {
             self.service = service
         }
         
-        func makeOutputs(from inputs: Inputs) {
+        func makeOutputs(from inputs: Inputs) -> Outputs {
             let initialState = State(
                 fetchedNews: [],
                 isLoading: false,
                 error: nil
             )
             
+            let fetchMiddleware = NewsList.makeFetchNewsMiddleware(newsService: service)
+            
+            let store = Store(initialState: initialState, reducer: NewsList.reduce, middlewares: [
+                fetchMiddleware
+                ])
+            
+            let props = store.state
+            .map(NewsList.makeProps)
+            
+            let actionCreator = ActionCreator(inputs: inputs, newsService: service)
+            
+            let stateChanges = actionCreator.actions
+            .do(onNext: store.dispatch)
+            .voidValues()
+            
+            return Outputs(
+                props: props,
+                stateChanged: stateChanges
+            )
         }
     }
-    
 }

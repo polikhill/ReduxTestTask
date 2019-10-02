@@ -51,4 +51,18 @@ final class NewsListView: UIView {
     func setItems(_ props: [NewsCell.Props]) {
         items.onNext(props)
     }
+    
+    func toggleLoading(on: Bool) {
+        if on {
+            refreshControl.beginRefreshing()
+        } else {
+            refreshControl.endRefreshing()
+        }
+    }
+}
+
+extension Reactive where Base: NewsListView {    
+    var pullToRefresh: Observable<Void> {
+        return base.refreshControl.rx.controlEvent(.valueChanged).asObservable()
+    }
 }

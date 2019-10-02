@@ -18,15 +18,17 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         self.window = UIWindow(frame: UIScreen.main.bounds)
         self.window?.makeKeyAndVisible()
         
-        showApp()
+        let newsService = NewsService()
+        
+        showApp(service: newsService)
         
         return true
     }
 }
 
 extension AppDelegate {
-    private func showApp() {
-        let newsController = NewsListController()
+    private func showApp(service: NewsServiceProtocol) {
+        let newsController = NewsListController(service: service)
         let newsNavigationNavController = UINavigationController(rootViewController: newsController)
         self.window?.rootViewController = newsNavigationNavController
     }

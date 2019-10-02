@@ -21,7 +21,7 @@ extension NewsList {
         }
         return NewsListController.Props(
             items: state.fetchedNews.compactMap { makeNewsCellProps(from: $0) },
-            error: state.error,
+            error: state.error?.localizedDescription,
             isLoading: state.isLoading
         )
     }
