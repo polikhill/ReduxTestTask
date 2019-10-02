@@ -8,6 +8,7 @@
 
 import UIKit
 import RxSwift
+import RxCocoa
 
 final class NewsListView: UIView {
 
@@ -40,11 +41,14 @@ final class NewsListView: UIView {
             tableView.bottomAnchor.constraint(equalTo: bottomAnchor)
             ])
         
-//            items
-//            .bind(to: tableView.rx.items(cellIdentifier: NewsCell.identifier, cellType: NewsCell.self)) { row, model, cell in
-//                cell.configre(with: model)
-//            }
-//            .disposed(by: disposeBag)
-        
+        items
+            .bind(to: tableView.rx.items(cellIdentifier: NewsCell.identifier, cellType: NewsCell.self)) { _, model, cell in
+                cell.render(props: model)
+            }
+            .disposed(by: disposeBag)
+    }
+    
+    func setItems(_ props: [NewsCell.Props]) {
+        items.onNext(props)
     }
 }

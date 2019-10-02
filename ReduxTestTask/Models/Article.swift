@@ -13,7 +13,7 @@ struct Article {
     let title: String
     let description: String
     let image: URL?
-    let publishDate: Date?
+    let publishDate: Date
     let content: String?
 }
 

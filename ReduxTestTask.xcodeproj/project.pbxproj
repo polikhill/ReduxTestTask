@@ -24,19 +24,19 @@
 		DD29117723439540009D56C8 /* AppStrings.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD29117623439540009D56C8 /* AppStrings.swift */; };
 		DD32B13B2343840000FC8C6B /* Alamofire.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DD99875423436EFD009593A1 /* Alamofire.framework */; };
 		DD32B13C2343840000FC8C6B /* Moya.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DD32B139234382E400FC8C6B /* Moya.framework */; };
-		DD32B13D2343840000FC8C6B /* ReactiveSwift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DD32B1372343798A00FC8C6B /* ReactiveSwift.framework */; };
-		DD32B13E2343840000FC8C6B /* Result.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DD32B1352343798500FC8C6B /* Result.framework */; };
-		DD32B13F2343840000FC8C6B /* RxBlocking.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DDA1B4AA23436A13000FF73C /* RxBlocking.framework */; };
 		DD32B1402343840000FC8C6B /* RxCocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DDA1B4A923436A13000FF73C /* RxCocoa.framework */; };
 		DD32B1422343840000FC8C6B /* RxSwift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DDA1B4AB23436A13000FF73C /* RxSwift.framework */; };
-		DD32B1472343840000FC8C6B /* RxAtomic.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DD32B1442343840000FC8C6B /* RxAtomic.framework */; };
-		DD32B1482343840000FC8C6B /* ReactiveMoya.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DD32B1452343840000FC8C6B /* ReactiveMoya.framework */; };
 		DD32B1492343840000FC8C6B /* RxMoya.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DD32B1462343840000FC8C6B /* RxMoya.framework */; };
 		DD83BFF12343969C0092338A /* NewsListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD83BFF02343969C0092338A /* NewsListView.swift */; };
 		DD83BFF32343991E0092338A /* UITableViewExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD83BFF22343991E0092338A /* UITableViewExtensions.swift */; };
 		DD83BFF62343999D0092338A /* NibInitializable.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD83BFF52343999D0092338A /* NibInitializable.swift */; };
-		DD83BFF723439B620092338A /* RxRelay.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DDA1B4A823436A13000FF73C /* RxRelay.framework */; };
 		DD9987572343748D009593A1 /* NetworkService.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD9987562343748D009593A1 /* NetworkService.swift */; };
+		DDB20D0A2344BDAF00A50A76 /* ReduxStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = DDB20D092344BDAF00A50A76 /* ReduxStore.swift */; };
+		DDB20D0C2344BDFB00A50A76 /* NewsListStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = DDB20D0B2344BDFB00A50A76 /* NewsListStore.swift */; };
+		DDB20D0E2344BE1400A50A76 /* NewsListNameSpace.swift in Sources */ = {isa = PBXBuildFile; fileRef = DDB20D0D2344BE1400A50A76 /* NewsListNameSpace.swift */; };
+		DDB20D102344C2DB00A50A76 /* Action.swift in Sources */ = {isa = PBXBuildFile; fileRef = DDB20D0F2344C2DB00A50A76 /* Action.swift */; };
+		DDB20D122344C76100A50A76 /* NewsListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = DDB20D112344C76100A50A76 /* NewsListViewModel.swift */; };
+		DDB20D142344CA6C00A50A76 /* NewsListProps.swift in Sources */ = {isa = PBXBuildFile; fileRef = DDB20D132344CA6C00A50A76 /* NewsListProps.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -74,6 +74,12 @@
 		DDA1B4AA23436A13000FF73C /* RxBlocking.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = RxBlocking.framework; path = Carthage/Build/iOS/RxBlocking.framework; sourceTree = "<group>"; };
 		DDA1B4AB23436A13000FF73C /* RxSwift.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = RxSwift.framework; path = Carthage/Build/iOS/RxSwift.framework; sourceTree = "<group>"; };
 		DDA1B4AC23436A13000FF73C /* RxTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = RxTest.framework; path = Carthage/Build/iOS/RxTest.framework; sourceTree = "<group>"; };
+		DDB20D092344BDAF00A50A76 /* ReduxStore.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ReduxStore.swift; sourceTree = "<group>"; };
+		DDB20D0B2344BDFB00A50A76 /* NewsListStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewsListStore.swift; sourceTree = "<group>"; };
+		DDB20D0D2344BE1400A50A76 /* NewsListNameSpace.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewsListNameSpace.swift; sourceTree = "<group>"; };
+		DDB20D0F2344C2DB00A50A76 /* Action.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Action.swift; sourceTree = "<group>"; };
+		DDB20D112344C76100A50A76 /* NewsListViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewsListViewModel.swift; sourceTree = "<group>"; };
+		DDB20D132344CA6C00A50A76 /* NewsListProps.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewsListProps.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -81,18 +87,12 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				DD83BFF723439B620092338A /* RxRelay.framework in Frameworks */,
+				DD32B1422343840000FC8C6B /* RxSwift.framework in Frameworks */,
 				DD29117523439503009D56C8 /* Kingfisher.framework in Frameworks */,
-				DD32B1472343840000FC8C6B /* RxAtomic.framework in Frameworks */,
-				DD32B1482343840000FC8C6B /* ReactiveMoya.framework in Frameworks */,
 				DD32B1492343840000FC8C6B /* RxMoya.framework in Frameworks */,
 				DD32B13B2343840000FC8C6B /* Alamofire.framework in Frameworks */,
 				DD32B13C2343840000FC8C6B /* Moya.framework in Frameworks */,
-				DD32B13D2343840000FC8C6B /* ReactiveSwift.framework in Frameworks */,
-				DD32B13E2343840000FC8C6B /* Result.framework in Frameworks */,
-				DD32B13F2343840000FC8C6B /* RxBlocking.framework in Frameworks */,
 				DD32B1402343840000FC8C6B /* RxCocoa.framework in Frameworks */,
-				DD32B1422343840000FC8C6B /* RxSwift.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -195,9 +195,9 @@
 		DD2735842343521300607035 /* NewsList */ = {
 			isa = PBXGroup;
 			children = (
-				DD27357E2343520E00607035 /* TableViewCells */,
-				DD2735852343524800607035 /* NewsListController.swift */,
-				DD83BFF02343969C0092338A /* NewsListView.swift */,
+				DDB20D0D2344BE1400A50A76 /* NewsListNameSpace.swift */,
+				DDB20D082344B7D500A50A76 /* ViewModel */,
+				DDB20D072344B7CE00A50A76 /* View */,
 			);
 			path = NewsList;
 			sourceTree = "<group>";
@@ -225,6 +225,8 @@
 		DD29116B23439349009D56C8 /* Library */ = {
 			isa = PBXGroup;
 			children = (
+				DDB20D092344BDAF00A50A76 /* ReduxStore.swift */,
+				DDB20D0F2344C2DB00A50A76 /* Action.swift */,
 			);
 			path = Library;
 			sourceTree = "<group>";
@@ -267,6 +269,26 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
+		DDB20D072344B7CE00A50A76 /* View */ = {
+			isa = PBXGroup;
+			children = (
+				DD27357E2343520E00607035 /* TableViewCells */,
+				DD2735852343524800607035 /* NewsListController.swift */,
+				DD83BFF02343969C0092338A /* NewsListView.swift */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		DDB20D082344B7D500A50A76 /* ViewModel */ = {
+			isa = PBXGroup;
+			children = (
+				DDB20D0B2344BDFB00A50A76 /* NewsListStore.swift */,
+				DDB20D112344C76100A50A76 /* NewsListViewModel.swift */,
+				DDB20D132344CA6C00A50A76 /* NewsListProps.swift */,
+			);
+			path = ViewModel;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -277,7 +299,7 @@
 				DD27355D23434F5B00607035 /* Sources */,
 				DD27355E23434F5B00607035 /* Frameworks */,
 				DD27355F23434F5B00607035 /* Resources */,
-				DDA1B4A62343677C000FF73C /* ShellScript */,
+				DDA1B4A62343677C000FF73C /* carthage */,
 			);
 			buildRules = (
 			);
@@ -335,7 +357,7 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		DDA1B4A62343677C000FF73C /* ShellScript */ = {
+		DDA1B4A62343677C000FF73C /* carthage */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -344,37 +366,33 @@
 			);
 			inputPaths = (
 				"$(SRCROOT)/Carthage/Build/iOS/RxSwift.framework",
-				"$(SRCROOT)/Carthage/Build/iOS/RxBlocking.framework",
 				"$(SRCROOT)/Carthage/Build/iOS/RxCocoa.framework",
 				"$(SRCROOT)/Carthage/Build/iOS/Alamofire.framework",
-				"$(SRCROOT)/Carthage/Build/iOS/Result.framework",
 				"$(SRCROOT)/Carthage/Build/iOS/Moya.framework",
-				"$(SRCROOT)/Carthage/Build/iOS/RxAtomic.framework",
-				"$(SRCROOT)/Carthage/Build/iOS/ReactiveMoya.framework",
 				"$(SRCROOT)/Carthage/Build/iOS/RxMoya.framework",
-				"$(SRCROOT)/Carthage/Build/iOS/ReactiveSwift.framework",
 				"$(SRCROOT)/Carthage/Build/iOS/Kingfisher.framework",
 				"$(SRCROOT)/Carthage/Build/iOS/RxRelay.framework",
+				"$(SRCROOT)/Carthage/Build/iOS/RxAtomic.framework",
+				"$(SRCROOT)/Carthage/Build/iOS/Result.framework",
 			);
+			name = carthage;
 			outputFileListPaths = (
 			);
 			outputPaths = (
 				"$(BUILT_PRODUCTS_DIR)/$(FRAMEWORKS_FOLDER_PATH)/RxSwift.framework",
 				"$(BUILT_PRODUCTS_DIR)/$(FRAMEWORKS_FOLDER_PATH)/RxCocoa.framework",
-				"$(BUILT_PRODUCTS_DIR)/$(FRAMEWORKS_FOLDER_PATH)/RxBlocking.framework",
 				"$(BUILT_PRODUCTS_DIR)/$(FRAMEWORKS_FOLDER_PATH)/Alamofire.framework",
-				"$(BUILT_PRODUCTS_DIR)/$(FRAMEWORKS_FOLDER_PATH)/Result.framework",
 				"$(BUILT_PRODUCTS_DIR)/$(FRAMEWORKS_FOLDER_PATH)/Moya.framework",
-				"$(BUILT_PRODUCTS_DIR)/$(FRAMEWORKS_FOLDER_PATH)/RxAtomic.framework",
-				"$(BUILT_PRODUCTS_DIR)/$(FRAMEWORKS_FOLDER_PATH)/ReactiveMoya.framework",
 				"$(BUILT_PRODUCTS_DIR)/$(FRAMEWORKS_FOLDER_PATH)/RxMoya.framework",
-				"$(BUILT_PRODUCTS_DIR)/$(FRAMEWORKS_FOLDER_PATH)/ReactiveSwift.framework",
 				"$(BUILT_PRODUCTS_DIR)/$(FRAMEWORKS_FOLDER_PATH)/Kingfisher.framework",
 				"$(BUILT_PRODUCTS_DIR)/$(FRAMEWORKS_FOLDER_PATH)/RxRelay.framework",
+				"$(BUILT_PRODUCTS_DIR)/$(FRAMEWORKS_FOLDER_PATH)/RxAtomic.framework",
+				"$(BUILT_PRODUCTS_DIR)/$(FRAMEWORKS_FOLDER_PATH)/Result.framework",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "/usr/local/bin/carthage copy-frameworks\n";
+			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -383,15 +401,21 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				DDB20D0A2344BDAF00A50A76 /* ReduxStore.swift in Sources */,
+				DDB20D102344C2DB00A50A76 /* Action.swift in Sources */,
 				DD291162234385D0009D56C8 /* NewsNetworkInfo.swift in Sources */,
 				DD2735862343524800607035 /* NewsListController.swift in Sources */,
 				DD291166234385D0009D56C8 /* Article.swift in Sources */,
 				DD2735822343520E00607035 /* NewsCell.swift in Sources */,
 				DD9987572343748D009593A1 /* NetworkService.swift in Sources */,
+				DDB20D122344C76100A50A76 /* NewsListViewModel.swift in Sources */,
+				DDB20D0E2344BE1400A50A76 /* NewsListNameSpace.swift in Sources */,
 				DD83BFF12343969C0092338A /* NewsListView.swift in Sources */,
 				DD291164234385D0009D56C8 /* ImageType.swift in Sources */,
+				DDB20D0C2344BDFB00A50A76 /* NewsListStore.swift in Sources */,
 				DD83BFF32343991E0092338A /* UITableViewExtensions.swift in Sources */,
 				DD29117723439540009D56C8 /* AppStrings.swift in Sources */,
+				DDB20D142344CA6C00A50A76 /* NewsListProps.swift in Sources */,
 				DD83BFF62343999D0092338A /* NibInitializable.swift in Sources */,
 				DD291173234393ED009D56C8 /* FormatterExtensions.swift in Sources */,
 				DD291165234385D0009D56C8 /* ApiResponse.swift in Sources */,

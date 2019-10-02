@@ -22,8 +22,8 @@ final class NewsCell: UITableViewCell, NibInitializable, ReusableCell {
     struct Props: Equatable {
         let title: String
         let subtitle: String
-        let date: Date
-        let backgroundImageURL: URL
+        let date: String
+        let backgroundImageURL: URL?
     }
     
     static let identifier = "\(NewsCell.self)"
@@ -44,11 +44,6 @@ final class NewsCell: UITableViewCell, NibInitializable, ReusableCell {
         super.prepareForReuse()
         backgroundImageView.image = nil
     }
-
-    private func setDate(_ date: Date) {
-        let date = DateFormatter.shortTime.string(from: date)
-        dateLabel.text = date
-    }
     
     // MARK: - Public Methods
     
@@ -57,5 +52,6 @@ final class NewsCell: UITableViewCell, NibInitializable, ReusableCell {
         titleLabel.text = props.title
         subtitleLabel.text = props.subtitle
         subtitleLabel.numberOfLines = 0
+        dateLabel.text = props.date
     }
 }
