@@ -12,7 +12,7 @@ import RxCocoa
 
 final class NewsListView: UIView {
 
-    private let tableView = UITableView()
+    fileprivate let tableView = UITableView()
     fileprivate let refreshControl = UIRefreshControl()
     private let items = PublishSubject<[NewsCell.Props]>()
     private let disposeBag = DisposeBag()
@@ -29,8 +29,8 @@ final class NewsListView: UIView {
     private func setup() {
         tableView.addSubview(refreshControl)
         tableView.register(NewsCell.self)
-        tableView.rowHeight = UITableView.automaticDimension
-        tableView.estimatedRowHeight = 170
+        tableView.rowHeight = NewsCell.designedHeight
+        tableView.estimatedRowHeight = NewsCell.designedHeight
         
         addSubview(tableView)
         tableView.translatesAutoresizingMaskIntoConstraints = false
@@ -64,5 +64,13 @@ final class NewsListView: UIView {
 extension Reactive where Base: NewsListView {    
     var pullToRefresh: Observable<Void> {
         return base.refreshControl.rx.controlEvent(.valueChanged).asObservable()
+    }
+    
+    var willDisplayCell: Observable<Int> {
+        return base.tableView.rx.willDisplayCell.asObservable().map({$0.indexPath.row})
+    }
+    
+    var cellSelected: Observable<Int> {
+        return base.tableView.rx.itemSelected.asObservable().map({$0.row})
     }
 }

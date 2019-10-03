@@ -20,7 +20,30 @@ extension NewsList {
                     return DismissError()
                 })
             
-            self.actions = dismissErrorAction
+            let loadNewsAction = Observable.merge(
+                inputs.pullToRefresh,
+                inputs.viewWillAppear.take(1)
+            )
+                .map ({ _ -> Action in
+                    return LoadNews()
+                })
+            
+            let loadNextPageAction = inputs.willDisplayCellAt
+                .map ({ row -> Action in
+                    return LoadNextPage(row: row)
+                })
+            
+            let selectCellAction = inputs.cellSelectedAt
+                .map ({ row -> Action in
+                    return SelectedCell(index: row)
+                })
+            
+            self.actions = Observable.merge(
+            loadNewsAction,
+            dismissErrorAction,
+            loadNextPageAction,
+            selectCellAction
+            )
         }
     }
 }

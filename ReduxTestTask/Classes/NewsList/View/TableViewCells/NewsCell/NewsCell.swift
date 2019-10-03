@@ -28,7 +28,6 @@ final class NewsCell: UITableViewCell, NibInitializable, ReusableCell {
     
     static let identifier = "\(NewsCell.self)"
     static let designedHeight: CGFloat = 180
-    static let designedWidtht: CGFloat = 335
 
     // MARK: - Lifecycle
 

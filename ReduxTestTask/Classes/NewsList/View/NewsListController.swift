@@ -45,7 +45,9 @@ final class NewsListController: UIViewController {
         let inputs = NewsList.NewsListViewModel.Inputs(
             viewWillAppear: rx.methodInvoked(#selector(viewWillAppear(_:))).voidValues(),
             pullToRefresh: contentView.rx.pullToRefresh,
-            dismissError: errorPresenter.dismissed
+            dismissError: errorPresenter.dismissed,
+            willDisplayCellAt: contentView.rx.willDisplayCell,
+            cellSelectedAt: contentView.rx.cellSelected
         )
         
         let outputs = viewModel.makeOutputs(from: inputs)
@@ -56,6 +58,13 @@ final class NewsListController: UIViewController {
                 self.render(props: props)
             })
         .disposed(by: disposedBag)
+        
+        outputs.showArticle
+            .observeForUI()
+            .subscribe(onNext: { [unowned self ] article in
+                self.showArticle(article)
+            })
+            .disposed(by: disposedBag)
         
         outputs.stateChanged
         .subscribe()
@@ -76,5 +85,10 @@ final class NewsListController: UIViewController {
         }
         
         renderedProps = props
+    }
+    
+    private func showArticle(_ article: Article) {
+        let articleController = ArticleController(article: article)
+        navigationController?.pushViewController(articleController, animated: true)
     }
 }

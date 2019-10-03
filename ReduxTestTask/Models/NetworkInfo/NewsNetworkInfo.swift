@@ -14,8 +14,8 @@ struct NewsNetworkInfo {
     var json: [String: Any] {
         return [
             "page": page,
-            "pageSize": 20,
-            "country": "ua"
+            "pageSize": 10,
+            "country": "us"
         ]
     }
 

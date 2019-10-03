@@ -13,11 +13,17 @@ extension NewsList {
     
     struct State {
         var fetchedNews: [Article]
+        var page: Int
         var isLoading: Bool
         var error: Error?
+        var selectedArticle: Article?
     }
     
     struct LoadNews: Action { }
+    
+    struct LoadNextPage: Action {
+        let row: Int
+    }
     
     struct LoadNewsSuccess: Action {
         let news: [Article]
@@ -25,6 +31,14 @@ extension NewsList {
     
     struct LoadNewsError: Action {
         let error: Error
+    }
+    
+    struct SelectedCell: Action {
+        let index: Int
+    }
+    
+    struct ShowArticle: Action {
+        let article: Article
     }
     
     struct DismissError: Action { }
@@ -35,15 +49,27 @@ extension NewsList {
         switch action {
         case is LoadNews:
             newState.isLoading = true
+            newState.page = 1
+            newState.fetchedNews = []
+            
+        case is LoadNextPage:
+            newState.isLoading = true
             
         case let action as LoadNewsSuccess:
-            newState.fetchedNews = action.news
+            newState.fetchedNews.append(contentsOf: action.news)
             newState.isLoading = false
+            newState.page += 1
             
         case let action as LoadNewsError:
             newState.error = action.error
             newState.isLoading = false
             
+        case is SelectedCell:
+            break
+            
+        case let action as ShowArticle:
+            newState.selectedArticle = action.article
+
         case is DismissError:
             newState.error = nil
             

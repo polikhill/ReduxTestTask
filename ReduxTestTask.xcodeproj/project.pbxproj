@@ -41,6 +41,9 @@
 		DDB20D192344E4AF00A50A76 /* NewsListFetchMiddleware.swift in Sources */ = {isa = PBXBuildFile; fileRef = DDB20D182344E4AF00A50A76 /* NewsListFetchMiddleware.swift */; };
 		DDB20D1B2344F35D00A50A76 /* ErrorPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = DDB20D1A2344F35D00A50A76 /* ErrorPresenter.swift */; };
 		DDB20D1D2344F3FD00A50A76 /* RxSwiftExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = DDB20D1C2344F3FD00A50A76 /* RxSwiftExtensions.swift */; };
+		DDB20D212346239900A50A76 /* ArticleController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DDB20D1F2346239900A50A76 /* ArticleController.swift */; };
+		DDB20D222346239900A50A76 /* ArticleView.xib in Resources */ = {isa = PBXBuildFile; fileRef = DDB20D202346239900A50A76 /* ArticleView.xib */; };
+		DDB20D24234623C500A50A76 /* ArticleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DDB20D23234623C500A50A76 /* ArticleView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -88,6 +91,9 @@
 		DDB20D182344E4AF00A50A76 /* NewsListFetchMiddleware.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewsListFetchMiddleware.swift; sourceTree = "<group>"; };
 		DDB20D1A2344F35D00A50A76 /* ErrorPresenter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ErrorPresenter.swift; sourceTree = "<group>"; };
 		DDB20D1C2344F3FD00A50A76 /* RxSwiftExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RxSwiftExtensions.swift; sourceTree = "<group>"; };
+		DDB20D1F2346239900A50A76 /* ArticleController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArticleController.swift; sourceTree = "<group>"; };
+		DDB20D202346239900A50A76 /* ArticleView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ArticleView.xib; sourceTree = "<group>"; };
+		DDB20D23234623C500A50A76 /* ArticleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArticleView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -141,6 +147,7 @@
 		DD2735762343517F00607035 /* Classes */ = {
 			isa = PBXGroup;
 			children = (
+				DDB20D1E2346237100A50A76 /* Article */,
 				DD2735842343521300607035 /* NewsList */,
 			);
 			path = Classes;
@@ -309,6 +316,16 @@
 			path = Middleware;
 			sourceTree = "<group>";
 		};
+		DDB20D1E2346237100A50A76 /* Article */ = {
+			isa = PBXGroup;
+			children = (
+				DDB20D1F2346239900A50A76 /* ArticleController.swift */,
+				DDB20D23234623C500A50A76 /* ArticleView.swift */,
+				DDB20D202346239900A50A76 /* ArticleView.xib */,
+			);
+			path = Article;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -370,6 +387,7 @@
 			files = (
 				DD2735832343520E00607035 /* NewsCell.xib in Resources */,
 				DD27356F23434F5C00607035 /* LaunchScreen.storyboard in Resources */,
+				DDB20D222346239900A50A76 /* ArticleView.xib in Resources */,
 				DD27356C23434F5C00607035 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -421,6 +439,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				DDB20D212346239900A50A76 /* ArticleController.swift in Sources */,
 				DDB20D0A2344BDAF00A50A76 /* ReduxStore.swift in Sources */,
 				DDB20D102344C2DB00A50A76 /* Action.swift in Sources */,
 				DD291162234385D0009D56C8 /* NewsNetworkInfo.swift in Sources */,
@@ -436,6 +455,7 @@
 				DDB20D0C2344BDFB00A50A76 /* NewsListStore.swift in Sources */,
 				DDB20D192344E4AF00A50A76 /* NewsListFetchMiddleware.swift in Sources */,
 				DD83BFF32343991E0092338A /* UITableViewExtensions.swift in Sources */,
+				DDB20D24234623C500A50A76 /* ArticleView.swift in Sources */,
 				DD29117723439540009D56C8 /* AppStrings.swift in Sources */,
 				DDB20D142344CA6C00A50A76 /* NewsListProps.swift in Sources */,
 				DDB20D1B2344F35D00A50A76 /* ErrorPresenter.swift in Sources */,
