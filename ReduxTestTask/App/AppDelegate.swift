@@ -28,7 +28,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
 extension AppDelegate {
     private func showApp(service: NewsServiceProtocol) {
-        let newsController = NewsListController(service: service)
+        let newsController = NewsParentController(service: service)
         let newsNavigationNavController = UINavigationController(rootViewController: newsController)
         self.window?.rootViewController = newsNavigationNavController
     }

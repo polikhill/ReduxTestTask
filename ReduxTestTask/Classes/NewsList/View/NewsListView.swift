@@ -9,10 +9,11 @@
 import UIKit
 import RxSwift
 import RxCocoa
+import IGListKit
 
 final class NewsListView: UIView {
 
-    fileprivate let tableView = UITableView()
+    let collectionView = UICollectionView(frame: .zero, collectionViewLayout: UICollectionViewFlowLayout())
     fileprivate let refreshControl = UIRefreshControl()
     private let items = PublishSubject<[NewsCell.Props]>()
     private let disposeBag = DisposeBag()
@@ -27,25 +28,22 @@ final class NewsListView: UIView {
     }
     
     private func setup() {
-        tableView.addSubview(refreshControl)
-        tableView.register(NewsCell.self)
-        tableView.rowHeight = NewsCell.designedHeight
-        tableView.estimatedRowHeight = NewsCell.designedHeight
+        collectionView.addSubview(refreshControl)
+//        collectionView.register(cellType: NewsCell.self)
         
-        addSubview(tableView)
-        tableView.translatesAutoresizingMaskIntoConstraints = false
+        addSubview(collectionView)
+        collectionView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            tableView.leftAnchor.constraint(equalTo: leftAnchor),
-            tableView.topAnchor.constraint(equalTo: topAnchor),
-            tableView.rightAnchor.constraint(equalTo: rightAnchor),
-            tableView.bottomAnchor.constraint(equalTo: bottomAnchor)
+            collectionView.leftAnchor.constraint(equalTo: leftAnchor),
+            collectionView.topAnchor.constraint(equalTo: topAnchor),
+            collectionView.rightAnchor.constraint(equalTo: rightAnchor),
+            collectionView.bottomAnchor.constraint(equalTo: bottomAnchor)
             ])
         
-        items
-            .bind(to: tableView.rx.items(cellIdentifier: NewsCell.identifier, cellType: NewsCell.self)) { _, model, cell in
-                cell.render(props: model)
-            }
-            .disposed(by: disposeBag)
+        let collectionLayout = UICollectionViewFlowLayout()
+        collectionLayout.scrollDirection = .vertical
+        collectionLayout.estimatedItemSize = CGSize(width: collectionView.frame.width, height: NewsCell.designedHeight)
+        collectionView.collectionViewLayout = collectionLayout
     }
     
     func setItems(_ props: [NewsCell.Props]) {
@@ -67,10 +65,10 @@ extension Reactive where Base: NewsListView {
     }
     
     var willDisplayCell: Observable<Int> {
-        return base.tableView.rx.willDisplayCell.asObservable().map({$0.indexPath.row})
+        return base.collectionView.rx.willDisplayCell.asObservable().map({$0.at.row})
     }
     
     var cellSelected: Observable<Int> {
-        return base.tableView.rx.itemSelected.asObservable().map({$0.row})
+        return base.collectionView.rx.itemSelected.asObservable().map({$0.row})
     }
 }
