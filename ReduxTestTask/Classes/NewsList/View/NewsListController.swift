@@ -23,8 +23,8 @@ extension NewsListController {
         viewModelsFor object: Any
         ) -> [ListDiffable] {
         
-        guard let news = object as? DiffableBox<NewsCell.Props> else { return [] }
-        let diffableNews: [ListDiffable] = [news]
+        guard let props = object as? DiffableBox<NewsCell.Props> else { return [] }
+        let diffableNews: [ListDiffable] = [props]
         
         return diffableNews
     }
@@ -44,7 +44,6 @@ extension NewsListController {
         ) -> CGSize {
         
         guard let width = collectionContext?.containerSize.width else { fatalError() }
-        
         return CGSize(width: width, height: NewsCell.designedHeight)
     }
 }

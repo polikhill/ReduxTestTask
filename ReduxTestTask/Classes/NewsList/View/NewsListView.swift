@@ -29,7 +29,6 @@ final class NewsListView: UIView {
     
     private func setup() {
         collectionView.addSubview(refreshControl)
-//        collectionView.register(cellType: NewsCell.self)
         
         addSubview(collectionView)
         collectionView.translatesAutoresizingMaskIntoConstraints = false

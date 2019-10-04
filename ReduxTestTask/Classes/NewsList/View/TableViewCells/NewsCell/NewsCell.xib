@@ -60,10 +60,10 @@
             <viewLayoutGuide key="safeArea" id="ZTg-uK-7eu"/>
             <size key="customSize" width="434" height="244"/>
             <connections>
-                <outlet property="backgroundImageView" destination="Tny-bA-Dy3" id="HGG-GP-znt"/>
-                <outlet property="dateLabel" destination="l1m-Mx-RQM" id="R4B-JY-c0Z"/>
-                <outlet property="subtitleLabel" destination="HLr-Jw-5gM" id="SOG-2x-lf2"/>
-                <outlet property="titleLabel" destination="8rK-qH-kU4" id="uWF-Ky-TOT"/>
+                <outlet property="backgroundImageView" destination="Tny-bA-Dy3" id="GRL-NL-LpX"/>
+                <outlet property="dateLabel" destination="l1m-Mx-RQM" id="u1l-fM-hVJ"/>
+                <outlet property="subtitleLabel" destination="HLr-Jw-5gM" id="J9x-Vl-C7p"/>
+                <outlet property="titleLabel" destination="8rK-qH-kU4" id="DdW-Vv-bPD"/>
             </connections>
             <point key="canvasLocation" x="-200" y="102"/>
         </collectionViewCell>
