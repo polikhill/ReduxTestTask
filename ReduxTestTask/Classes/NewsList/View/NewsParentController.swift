@@ -24,8 +24,10 @@ final class NewsParentController: UIViewController {
     private let errorPresenter = ErrorPresenter()
     private var renderedProps: Props?
     private let disposedBag = DisposeBag()
+    private let willDisplayCellAt = PublishSubject<Int>()
+    private let itemSelectedAt = PublishSubject<Int>()
     
-    lazy var adapter: ListAdapter = {
+    private lazy var adapter: ListAdapter = {
         return ListAdapter(updater: ListAdapterUpdater(), viewController: self)
     }()
     
@@ -44,19 +46,19 @@ final class NewsParentController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        setupBindigns()
         adapter.collectionView = contentView.collectionView
         adapter.dataSource = self
+        adapter.delegate = self
+        setupBindigns()
     }
     
     private func setupBindigns() {
-        
         let inputs = NewsList.NewsListViewModel.Inputs(
             viewWillAppear: rx.methodInvoked(#selector(viewWillAppear(_:))).voidValues(),
             pullToRefresh: contentView.rx.pullToRefresh,
             dismissError: errorPresenter.dismissed,
-            willDisplayCellAt: contentView.rx.willDisplayCell,
-            cellSelectedAt: contentView.rx.cellSelected
+            willDisplayCellAt: willDisplayCellAt.asObservable(),
+            cellSelectedAt: itemSelectedAt.asObservable()
         )
         
         let outputs = viewModel.makeOutputs(from: inputs)
@@ -109,10 +111,23 @@ extension NewsParentController: ListAdapterDataSource {
     }
     
     func listAdapter(_ listAdapter: ListAdapter, sectionControllerFor object: Any) -> ListSectionController {
-        return NewsListController()
+        let newslistController = NewsListController()
+        newslistController.itemSelectedAt
+            .bind(to: itemSelectedAt)
+            .disposed(by: disposedBag)
+        
+        return newslistController
     }
     
     func emptyView(for listAdapter: ListAdapter) -> UIView? {
         return nil
     }
+}
+
+extension NewsParentController: IGListAdapterDelegate {
+    func listAdapter(_ listAdapter: ListAdapter, willDisplay object: Any, at index: Int) {
+        willDisplayCellAt.onNext(index)
+    }
+    
+    func listAdapter(_ listAdapter: ListAdapter, didEndDisplaying object: Any, at index: Int) { }
 }

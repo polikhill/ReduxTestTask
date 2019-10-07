@@ -34,17 +34,18 @@ extension NewsList {
         }
         
         func makeOutputs(from inputs: Inputs) -> Outputs {
+            let selectedArticle = PublishSubject<Article>()
+            
             let initialState = State(
                 fetchedNews: [],
                 page: 1,
                 isLoading: false,
-                error: nil,
-                selectedArticle: nil
+                error: nil
             )
             
             let fetchMiddleware = NewsList.makeFetchNewsMiddleware(newsService: service)
             let loadNextPageMiddleware = NewsList.makeLoadNextPageMiddleware(newsService: service)
-            let getSelectedArticleMiddleware = NewsList.makeShowArticleMiddleware()
+            let getSelectedArticleMiddleware = NewsList.makeShowArticleMiddleware(showArticle: selectedArticle)
             
             let store = Store(initialState: initialState, reducer: NewsList.reduce, middlewares: [
                 fetchMiddleware,
@@ -55,16 +56,29 @@ extension NewsList {
             let props = store.state
                 .map(NewsList.makeProps)
             
-            let actionCreator = ActionCreator(inputs: inputs, newsService: service)
+            let actionCreator = ActionCreator(inputs: inputs)
             
             let stateChanges = actionCreator.actions
                 .do(onNext: store.dispatch)
                 .voidValues()
+    
+        
+//            let article = store.state
+////                .debounce(0.3, scheduler: MainScheduler.instance)
+//                .withLatestFrom(actionCreator.actions)
+//                .flatMap({ action -> Observable<Article> in
+//                    guard let action = action as? ShowArticle else {
+//                        return Observable.empty()
+//                    }
+//                    return Observable
+//                        .just(action.article)
+//                        .ignoreNil()
+//                })
             
             return Outputs(
                 props: props,
                 stateChanged: stateChanges,
-                showArticle: store.state.map({ store -> Article? in store.selectedArticle }).ignoreNil()
+                showArticle: selectedArticle.asObservable()
             )
         }
     }

@@ -33,13 +33,17 @@ final class NewsCell: BaseCollectionViewCell, NibInitializable, ReusableCell {
     
     static let identifier = "\(NewsCell.self)"
     static let designedHeight: CGFloat = 180
+    static let spaceBetweeenCells: CGFloat = 20
     
     // MARK: - Lifecycle
     
     override func awakeFromNib() {
         super.awakeFromNib()
         backgroundImageView.layer.cornerRadius = 6
-        backgroundImageView.contentMode = .scaleAspectFit
+        backgroundImageView.contentMode = .scaleAspectFill
+        titleLabel.textColor = .white
+        subtitleLabel.textColor = .white
+        dateLabel.textColor = .white
     }
     
     override func prepareForReuse() {

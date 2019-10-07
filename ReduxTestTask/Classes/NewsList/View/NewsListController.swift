@@ -8,12 +8,16 @@
 
 import UIKit
 import IGListKit
+import RxSwift
 
 final class NewsListController: ListBindingSectionController<DiffableBox<NewsCell.Props>>, ListBindingSectionControllerDataSource {
    
+    let itemSelectedAt = PublishSubject<Int>()
+    
     override init() {
         super.init()
         dataSource = self
+        selectionDelegate = self
     }
 }
 
@@ -34,7 +38,7 @@ extension NewsListController {
         cellForViewModel viewModel: Any, at index: Int
         ) -> UICollectionViewCell & ListBindable {
         
-        guard let cell = collectionContext?.dequeueReusableCell(of: NewsCell.self, for: self, at: index) as? NewsCell else { fatalError() }
+        guard let cell = collectionContext?.dequeueReusableCell(withNibName: "\(NewsCell.self)", bundle: nil, for: self, at: index) as? NewsCell else { fatalError() }
         return cell
     }
     
@@ -45,5 +49,11 @@ extension NewsListController {
         
         guard let width = collectionContext?.containerSize.width else { fatalError() }
         return CGSize(width: width, height: NewsCell.designedHeight)
+    }
+}
+
+extension NewsListController: ListBindingSectionControllerSelectionDelegate {
+    func sectionController(_ sectionController: ListBindingSectionController<ListDiffable>, didSelectItemAt index: Int, viewModel: Any) {
+        itemSelectedAt.onNext(sectionController.section)
     }
 }

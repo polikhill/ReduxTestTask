@@ -16,7 +16,6 @@ extension NewsList {
         var page: Int
         var isLoading: Bool
         var error: Error?
-        var selectedArticle: Article?
     }
     
     struct LoadNews: Action { }
@@ -38,7 +37,7 @@ extension NewsList {
     }
     
     struct ShowArticle: Action {
-        let article: Article
+        let article: Article?
     }
     
     struct DismissError: Action { }
@@ -67,8 +66,8 @@ extension NewsList {
         case is SelectedCell:
             break
             
-        case let action as ShowArticle:
-            newState.selectedArticle = action.article
+        case is ShowArticle:
+            break
 
         case is DismissError:
             newState.error = nil

@@ -14,9 +14,8 @@ import IGListKit
 final class NewsListView: UIView {
 
     let collectionView = UICollectionView(frame: .zero, collectionViewLayout: UICollectionViewFlowLayout())
+    private let loader = UIActivityIndicatorView(style: .gray)
     fileprivate let refreshControl = UIRefreshControl()
-    private let items = PublishSubject<[NewsCell.Props]>()
-    private let disposeBag = DisposeBag()
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -28,7 +27,9 @@ final class NewsListView: UIView {
     }
     
     private func setup() {
-        collectionView.addSubview(refreshControl)
+        collectionView.refreshControl = refreshControl
+        collectionView.register(cellType: NewsCell.self)
+        collectionView.backgroundColor = .white
         
         addSubview(collectionView)
         collectionView.translatesAutoresizingMaskIntoConstraints = false
@@ -41,19 +42,28 @@ final class NewsListView: UIView {
         
         let collectionLayout = UICollectionViewFlowLayout()
         collectionLayout.scrollDirection = .vertical
-        collectionLayout.estimatedItemSize = CGSize(width: collectionView.frame.width, height: NewsCell.designedHeight)
+        collectionLayout.minimumInteritemSpacing = NewsCell.spaceBetweeenCells
+        collectionLayout.minimumLineSpacing = NewsCell.spaceBetweeenCells
         collectionView.collectionViewLayout = collectionLayout
     }
     
-    func setItems(_ props: [NewsCell.Props]) {
-        items.onNext(props)
+    private func setupLoader() {
+        loader.isHidden = true
+        loader.hidesWhenStopped = true
+        addSubview(loader)
+        loader.center = center
     }
     
     func toggleLoading(on: Bool) {
         if on {
-            refreshControl.beginRefreshing()
+            DispatchQueue.main.async {
+                self.loader.startAnimating()
+            }
         } else {
-            refreshControl.endRefreshing()
+            DispatchQueue.main.async {
+                self.loader.stopAnimating()
+                self.refreshControl.endRefreshing()
+            }
         }
     }
 }
@@ -61,13 +71,5 @@ final class NewsListView: UIView {
 extension Reactive where Base: NewsListView {    
     var pullToRefresh: Observable<Void> {
         return base.refreshControl.rx.controlEvent(.valueChanged).asObservable()
-    }
-    
-    var willDisplayCell: Observable<Int> {
-        return base.collectionView.rx.willDisplayCell.asObservable().map({$0.at.row})
-    }
-    
-    var cellSelected: Observable<Int> {
-        return base.collectionView.rx.itemSelected.asObservable().map({$0.row})
     }
 }
