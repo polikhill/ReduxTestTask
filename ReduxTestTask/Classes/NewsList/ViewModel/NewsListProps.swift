@@ -10,7 +10,7 @@ import Foundation
 
 extension NewsList {
     
-    static func makeProps(from state: State) -> NewsListController.Props {
+    static func makeProps(from state: State) -> NewsListViewController.Props {
         func makeNewsCellProps(from article: Article) -> NewsCell.Props {
             return NewsCell.Props(
                 title: article.author,
@@ -19,7 +19,7 @@ extension NewsList {
                 backgroundImageURL: article.image
             )
         }
-        return NewsListController.Props(
+        return NewsListViewController.Props(
             items: state.fetchedNews.compactMap { makeNewsCellProps(from: $0) },
             error: state.error?.localizedDescription,
             isLoading: state.isLoading

@@ -40,16 +40,14 @@ final class NewsListView: UIView {
             tableView.rightAnchor.constraint(equalTo: rightAnchor),
             tableView.bottomAnchor.constraint(equalTo: bottomAnchor)
             ])
-        
-        items
+    }
+    
+    func render(_ props: [NewsCell.Props]) {
+        Observable.just(props)
             .bind(to: tableView.rx.items(cellIdentifier: NewsCell.identifier, cellType: NewsCell.self)) { _, model, cell in
                 cell.render(props: model)
             }
             .disposed(by: disposeBag)
-    }
-    
-    func setItems(_ props: [NewsCell.Props]) {
-        items.onNext(props)
     }
     
     func toggleLoading(on: Bool) {

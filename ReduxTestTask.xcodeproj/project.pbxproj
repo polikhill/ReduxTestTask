@@ -12,7 +12,7 @@
 		DD27356F23434F5C00607035 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = DD27356D23434F5C00607035 /* LaunchScreen.storyboard */; };
 		DD2735822343520E00607035 /* NewsCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD2735802343520E00607035 /* NewsCell.swift */; };
 		DD2735832343520E00607035 /* NewsCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = DD2735812343520E00607035 /* NewsCell.xib */; };
-		DD2735862343524800607035 /* NewsListController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD2735852343524800607035 /* NewsListController.swift */; };
+		DD2735862343524800607035 /* NewsListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD2735852343524800607035 /* NewsListViewController.swift */; };
 		DD291162234385D0009D56C8 /* NewsNetworkInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD29115D234385D0009D56C8 /* NewsNetworkInfo.swift */; };
 		DD291163234385D0009D56C8 /* NetworkAtricle.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD29115E234385D0009D56C8 /* NetworkAtricle.swift */; };
 		DD291164234385D0009D56C8 /* ImageType.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD29115F234385D0009D56C8 /* ImageType.swift */; };
@@ -23,13 +23,14 @@
 		DD29117523439503009D56C8 /* Kingfisher.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DD29117423439503009D56C8 /* Kingfisher.framework */; };
 		DD29117723439540009D56C8 /* AppStrings.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD29117623439540009D56C8 /* AppStrings.swift */; };
 		DD32B13B2343840000FC8C6B /* Alamofire.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DD99875423436EFD009593A1 /* Alamofire.framework */; };
-		DD32B13C2343840000FC8C6B /* Moya.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DD32B139234382E400FC8C6B /* Moya.framework */; };
 		DD32B1402343840000FC8C6B /* RxCocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DDA1B4A923436A13000FF73C /* RxCocoa.framework */; };
 		DD32B1422343840000FC8C6B /* RxSwift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DDA1B4AB23436A13000FF73C /* RxSwift.framework */; };
 		DD32B1492343840000FC8C6B /* RxMoya.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DD32B1462343840000FC8C6B /* RxMoya.framework */; };
 		DD83BFF12343969C0092338A /* NewsListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD83BFF02343969C0092338A /* NewsListView.swift */; };
 		DD83BFF32343991E0092338A /* UITableViewExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD83BFF22343991E0092338A /* UITableViewExtensions.swift */; };
 		DD83BFF62343999D0092338A /* NibInitializable.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD83BFF52343999D0092338A /* NibInitializable.swift */; };
+		DD889CF8234C7D1B0093663B /* Moya.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DD32B139234382E400FC8C6B /* Moya.framework */; };
+		DD889CF9234C7D4D0093663B /* Result.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DD32B1352343798500FC8C6B /* Result.framework */; };
 		DD9987572343748D009593A1 /* NetworkService.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD9987562343748D009593A1 /* NetworkService.swift */; };
 		DDB20D0A2344BDAF00A50A76 /* ReduxStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = DDB20D092344BDAF00A50A76 /* ReduxStore.swift */; };
 		DDB20D0C2344BDFB00A50A76 /* NewsListStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = DDB20D0B2344BDFB00A50A76 /* NewsListStore.swift */; };
@@ -54,7 +55,7 @@
 		DD27357023434F5C00607035 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		DD2735802343520E00607035 /* NewsCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NewsCell.swift; sourceTree = "<group>"; };
 		DD2735812343520E00607035 /* NewsCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = NewsCell.xib; sourceTree = "<group>"; };
-		DD2735852343524800607035 /* NewsListController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewsListController.swift; sourceTree = "<group>"; };
+		DD2735852343524800607035 /* NewsListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewsListViewController.swift; sourceTree = "<group>"; };
 		DD29115D234385D0009D56C8 /* NewsNetworkInfo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NewsNetworkInfo.swift; sourceTree = "<group>"; };
 		DD29115E234385D0009D56C8 /* NetworkAtricle.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NetworkAtricle.swift; sourceTree = "<group>"; };
 		DD29115F234385D0009D56C8 /* ImageType.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImageType.swift; sourceTree = "<group>"; };
@@ -101,11 +102,12 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				DD889CF9234C7D4D0093663B /* Result.framework in Frameworks */,
+				DD889CF8234C7D1B0093663B /* Moya.framework in Frameworks */,
 				DD32B1422343840000FC8C6B /* RxSwift.framework in Frameworks */,
 				DD29117523439503009D56C8 /* Kingfisher.framework in Frameworks */,
 				DD32B1492343840000FC8C6B /* RxMoya.framework in Frameworks */,
 				DD32B13B2343840000FC8C6B /* Alamofire.framework in Frameworks */,
-				DD32B13C2343840000FC8C6B /* Moya.framework in Frameworks */,
 				DD32B1402343840000FC8C6B /* RxCocoa.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -290,7 +292,7 @@
 			isa = PBXGroup;
 			children = (
 				DD27357E2343520E00607035 /* TableViewCells */,
-				DD2735852343524800607035 /* NewsListController.swift */,
+				DD2735852343524800607035 /* NewsListViewController.swift */,
 				DD83BFF02343969C0092338A /* NewsListView.swift */,
 			);
 			path = View;
@@ -406,11 +408,9 @@
 				"$(SRCROOT)/Carthage/Build/iOS/RxSwift.framework",
 				"$(SRCROOT)/Carthage/Build/iOS/RxCocoa.framework",
 				"$(SRCROOT)/Carthage/Build/iOS/Alamofire.framework",
-				"$(SRCROOT)/Carthage/Build/iOS/Moya.framework",
 				"$(SRCROOT)/Carthage/Build/iOS/RxMoya.framework",
 				"$(SRCROOT)/Carthage/Build/iOS/Kingfisher.framework",
-				"$(SRCROOT)/Carthage/Build/iOS/RxRelay.framework",
-				"$(SRCROOT)/Carthage/Build/iOS/RxAtomic.framework",
+				"$(SRCROOT)/Carthage/Build/iOS/Moya.framework",
 				"$(SRCROOT)/Carthage/Build/iOS/Result.framework",
 			);
 			name = carthage;
@@ -420,11 +420,9 @@
 				"$(BUILT_PRODUCTS_DIR)/$(FRAMEWORKS_FOLDER_PATH)/RxSwift.framework",
 				"$(BUILT_PRODUCTS_DIR)/$(FRAMEWORKS_FOLDER_PATH)/RxCocoa.framework",
 				"$(BUILT_PRODUCTS_DIR)/$(FRAMEWORKS_FOLDER_PATH)/Alamofire.framework",
-				"$(BUILT_PRODUCTS_DIR)/$(FRAMEWORKS_FOLDER_PATH)/Moya.framework",
 				"$(BUILT_PRODUCTS_DIR)/$(FRAMEWORKS_FOLDER_PATH)/RxMoya.framework",
 				"$(BUILT_PRODUCTS_DIR)/$(FRAMEWORKS_FOLDER_PATH)/Kingfisher.framework",
-				"$(BUILT_PRODUCTS_DIR)/$(FRAMEWORKS_FOLDER_PATH)/RxRelay.framework",
-				"$(BUILT_PRODUCTS_DIR)/$(FRAMEWORKS_FOLDER_PATH)/RxAtomic.framework",
+				"$(BUILT_PRODUCTS_DIR)/$(FRAMEWORKS_FOLDER_PATH)/Moya.framework",
 				"$(BUILT_PRODUCTS_DIR)/$(FRAMEWORKS_FOLDER_PATH)/Result.framework",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -443,7 +441,7 @@
 				DDB20D0A2344BDAF00A50A76 /* ReduxStore.swift in Sources */,
 				DDB20D102344C2DB00A50A76 /* Action.swift in Sources */,
 				DD291162234385D0009D56C8 /* NewsNetworkInfo.swift in Sources */,
-				DD2735862343524800607035 /* NewsListController.swift in Sources */,
+				DD2735862343524800607035 /* NewsListViewController.swift in Sources */,
 				DD291166234385D0009D56C8 /* Article.swift in Sources */,
 				DD2735822343520E00607035 /* NewsCell.swift in Sources */,
 				DD9987572343748D009593A1 /* NetworkService.swift in Sources */,

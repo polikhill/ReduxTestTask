@@ -42,6 +42,7 @@ final class NewsCell: UITableViewCell, NibInitializable, ReusableCell {
     override func prepareForReuse() {
         super.prepareForReuse()
         backgroundImageView.image = nil
+        backgroundImageView.kf.cancelDownloadTask()
     }
     
     // MARK: - Public Methods

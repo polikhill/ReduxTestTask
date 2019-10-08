@@ -1,5 +1,5 @@
 //
-//  NewsListController.swift
+//  NewsListViewController.swift
 //  ReduxTestTask
 //
 //  Created by Polina Hill on 10/1/19.
@@ -9,7 +9,7 @@
 import UIKit
 import RxSwift
 
-final class NewsListController: UIViewController {
+final class NewsListViewController: UIViewController {
 
     struct Props {
         let items: [NewsCell.Props]
@@ -73,7 +73,7 @@ final class NewsListController: UIViewController {
     
     private func render(props: Props) {
         if renderedProps?.items != props.items {
-            contentView.setItems(props.items)
+            contentView.render(props.items)
         }
         
         if renderedProps?.isLoading != props.isLoading {

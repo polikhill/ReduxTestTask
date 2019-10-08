@@ -9,11 +9,6 @@
 import Foundation
 import Moya
 
-enum ApiResponse {
-    case success(object: Any)
-    case failure(error: Error)
-}
-
 enum ParseError: Error {
     case parsingError
     case error(String)
@@ -27,16 +22,16 @@ enum ParseError: Error {
 }
 
 struct ApiParseResult {
-    static func parse(response: Response) -> ApiResponse {
+    static func parse(response: Response) -> Result<[Article], Error> {
 
         switch response.statusCode {
         case 200..<300:
             do {
-                let model: NetworkResponse = try response.map(NetworkResponse.self)
-                return ApiResponse.success(object: model.articles.compactMap(Article.init))
+                let model: NetworkArticleResponse = try response.map(NetworkArticleResponse.self)
+                return .success(model.articles.compactMap(Article.init))
             }
             catch {
-                return ApiResponse.failure(error: error)
+                return .failure(error)
             }
         default:
             do {
@@ -44,10 +39,10 @@ struct ApiParseResult {
                 guard let dict = json as? [String: Any],
                     let message = dict["message"] as? String
                     else { throw ParseError.parsingError }
-                return ApiResponse.failure(error: ParseError.error(message))
+                return .failure(ParseError.error(message))
             }
             catch {
-                return ApiResponse.failure(error: error)
+                return .failure(error)
             }
         }
     }
