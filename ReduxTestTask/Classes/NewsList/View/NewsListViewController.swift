@@ -18,7 +18,6 @@ final class NewsListViewController: UIViewController {
     }
     
     private lazy var contentView = NewsListView()
-    private var data = [ListDiffable]()
     private let viewModel: NewsList.NewsListViewModel
     private let errorPresenter = ErrorPresenter()
     private var renderedProps: Props?
@@ -82,14 +81,12 @@ final class NewsListViewController: UIViewController {
     }
     
     private func render(props: Props) {
-        data = props.contentViewProps.items
-        adapter.performUpdates(animated: true)
-        
         if let error = props.error, renderedProps?.error != error {
             errorPresenter.present(error: error, on: self)
         }
         
         renderedProps = props
+        adapter.performUpdates(animated: true)
     }
     
     private func showArticle(_ article: Article) {
@@ -100,7 +97,7 @@ final class NewsListViewController: UIViewController {
 
 extension NewsListViewController: ListAdapterDataSource {
     func objects(for listAdapter: ListAdapter) -> [ListDiffable] {
-        return data
+        return renderedProps?.contentViewProps.items ?? []
     }
     
     func listAdapter(_ listAdapter: ListAdapter, sectionControllerFor object: Any) -> ListSectionController {
