@@ -12,10 +12,16 @@ import RxCocoa
 
 final class NewsListView: UIView {
 
+    struct ContentViewProps {
+        let isLoading: Bool
+        let items: [NewsCell.Props]
+    }
+    
     fileprivate let tableView = UITableView()
     fileprivate let refreshControl = UIRefreshControl()
     private let items = PublishSubject<[NewsCell.Props]>()
     private let disposeBag = DisposeBag()
+    private var renderedProps: ContentViewProps?
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -42,20 +48,27 @@ final class NewsListView: UIView {
             ])
     }
     
-    func render(_ props: [NewsCell.Props]) {
-        Observable.just(props)
-            .bind(to: tableView.rx.items(cellIdentifier: NewsCell.identifier, cellType: NewsCell.self)) { _, model, cell in
-                cell.render(props: model)
-            }
-            .disposed(by: disposeBag)
-    }
-    
-    func toggleLoading(on: Bool) {
+    private func toggleLoading(on: Bool) {
         if on {
             refreshControl.beginRefreshing()
         } else {
             refreshControl.endRefreshing()
         }
+    }
+    
+    func render(_ props: ContentViewProps) {
+        if props.isLoading != renderedProps?.isLoading {
+            toggleLoading(on: props.isLoading)
+        }
+        
+        if props.items != renderedProps?.items {
+        Observable.just(props.items)
+            .bind(to: tableView.rx.items(cellIdentifier: NewsCell.identifier, cellType: NewsCell.self)) { _, model, cell in
+                cell.render(props: model)
+            }
+            .disposed(by: disposeBag)
+        }
+        renderedProps = props
     }
 }
 

@@ -12,9 +12,8 @@ import RxSwift
 final class NewsListViewController: UIViewController {
 
     struct Props {
-        let items: [NewsCell.Props]
+        let contentViewProps: NewsListView.ContentViewProps
         let error: String?
-        let isLoading: Bool
     }
     
     private lazy var contentView = NewsListView()
@@ -72,13 +71,7 @@ final class NewsListViewController: UIViewController {
     }
     
     private func render(props: Props) {
-        if renderedProps?.items != props.items {
-            contentView.render(props.items)
-        }
-        
-        if renderedProps?.isLoading != props.isLoading {
-            contentView.toggleLoading(on: props.isLoading)
-        }
+        contentView.render(props.contentViewProps)
         
         if let error = props.error, renderedProps?.error != error {
             errorPresenter.present(error: error, on: self)
