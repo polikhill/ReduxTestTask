@@ -12,10 +12,19 @@ import RxCocoa
 import IGListKit
 
 final class NewsListView: UIView {
-
+    
+    struct ContentViewProps {
+        let isLoading: Bool
+        let items: [DiffableBox<NewsCell.Props>]
+    }
+    
     let collectionView = UICollectionView(frame: .zero, collectionViewLayout: UICollectionViewFlowLayout())
     private let loader = UIActivityIndicatorView(style: .gray)
     fileprivate let refreshControl = UIRefreshControl()
+    fileprivate let tableView = UITableView()
+    private let items = PublishSubject<[NewsCell.Props]>()
+    private let disposeBag = DisposeBag()
+    private var renderedProps: ContentViewProps?
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -54,7 +63,7 @@ final class NewsListView: UIView {
         loader.center = center
     }
     
-    func toggleLoading(on: Bool) {
+    private func toggleLoading(on: Bool) {
         if on {
             DispatchQueue.main.async {
                 self.loader.startAnimating()
@@ -65,6 +74,14 @@ final class NewsListView: UIView {
                 self.refreshControl.endRefreshing()
             }
         }
+    }
+    
+    func render(_ props: ContentViewProps) {
+        if props.isLoading != renderedProps?.isLoading {
+            toggleLoading(on: props.isLoading)
+        }
+        
+        renderedProps = props
     }
 }
 

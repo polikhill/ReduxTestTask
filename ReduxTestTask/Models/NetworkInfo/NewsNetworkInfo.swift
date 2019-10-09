@@ -10,7 +10,7 @@ import Foundation
 
 struct NewsNetworkInfo {
     let page: Int
-
+    
     var json: [String: Any] {
         return [
             "page": page,

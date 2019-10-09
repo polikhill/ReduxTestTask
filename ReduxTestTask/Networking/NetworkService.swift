@@ -51,16 +51,16 @@ extension NewsAPI: TargetType {
 }
 
 protocol NewsServiceProtocol {
-    func getNews(info: NewsNetworkInfo) -> Observable<ApiResponse>
+    func getNews(page: Int) -> Observable<Result<[Article], Error>>
 }
 
 final class NewsService: NewsServiceProtocol {
 
     private let provider = MoyaProvider<NewsAPI>(plugins: [NetworkLoggerPlugin(verbose: true)])
 
-    func getNews(info: NewsNetworkInfo) -> Observable<ApiResponse> {
-        return provider.rx.request(.getNews(info: info))
-            .map({ genericResponse -> ApiResponse in
+    func getNews(page: Int) -> Observable<Result<[Article], Error>> {
+        return provider.rx.request(.getNews(info: NewsNetworkInfo(page: page)))
+            .map({ genericResponse -> Result<[Article], Error> in
                 return ApiParseResult.parse(response: genericResponse)
             })
             .asObservable()

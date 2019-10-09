@@ -22,7 +22,7 @@ extension NewsList {
         }
         
         struct Outputs {
-            let props: Observable<NewsParentController.Props>
+            let props: Observable<NewsListViewController.Props>
             let stateChanged: Observable<Void>
             let showArticle: Observable<Article>
         }

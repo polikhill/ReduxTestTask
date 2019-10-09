@@ -20,15 +20,10 @@ extension NewsList {
                 return
             }
             
-            let info = NewsNetworkInfo(page: 1)
-            
-            newsService.getNews(info: info)
+            newsService.getNews(page: 1)
                 .map({ data -> Action in
                     switch data {
-                    case .success(let object):
-                        guard let news = object as? [Article] else {
-                            return LoadNewsError(error: ParseError.parsingError)
-                        }
+                    case .success(let news):
                         return LoadNewsSuccess(news: news)
                     case .failure(let message):
                         return LoadNewsError(error: message)
@@ -53,15 +48,10 @@ extension NewsList {
                     return
             }
             
-            let info = NewsNetworkInfo(page: store.page)
-            
-            newsService.getNews(info: info)
+            newsService.getNews(page: store.page)
                 .flatMap({ data -> Observable<Action> in
                     switch data {
-                    case .success(let object):
-                        guard let news = object as? [Article] else {
-                            return Observable.just(LoadNewsError(error: ParseError.parsingError))
-                        }
+                    case .success(let news):
                         guard !news.isEmpty else {
                             return Observable.empty()
                         }

@@ -1,5 +1,5 @@
 //
-//  NewsListController.swift
+//  NewsListViewController.swift
 //  ReduxTestTask
 //
 //  Created by Polina Hill on 10/4/19.
@@ -37,6 +37,7 @@ extension NewsListController {
         _ sectionController: ListBindingSectionController<ListDiffable>,
         cellForViewModel viewModel: Any, at index: Int
         ) -> UICollectionViewCell & ListBindable {
+
         
         guard let cell = collectionContext?.dequeueReusableCell(withNibName: "\(NewsCell.self)", bundle: nil, for: self, at: index) as? NewsCell else { fatalError() }
         return cell

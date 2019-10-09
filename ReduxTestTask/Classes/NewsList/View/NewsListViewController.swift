@@ -1,5 +1,5 @@
 //
-//  NewsParentController.swift
+//  NewsListViewController.swift
 //  ReduxTestTask
 //
 //  Created by Polina Hill on 10/1/19.
@@ -10,12 +10,11 @@ import UIKit
 import RxSwift
 import IGListKit
 
-final class NewsParentController: UIViewController {
-
+final class NewsListViewController: UIViewController {
+    
     struct Props {
-        let items: [NewsCell.Props]
+        let contentViewProps: NewsListView.ContentViewProps
         let error: String?
-        let isLoading: Bool
     }
     
     private lazy var contentView = NewsListView()
@@ -64,11 +63,11 @@ final class NewsParentController: UIViewController {
         let outputs = viewModel.makeOutputs(from: inputs)
         
         outputs.props
-        .observeForUI()
+            .observeForUI()
             .subscribe(onNext: { [unowned self ] props in
                 self.render(props: props)
             })
-        .disposed(by: disposedBag)
+            .disposed(by: disposedBag)
         
         outputs.showArticle
             .observeForUI()
@@ -78,19 +77,13 @@ final class NewsParentController: UIViewController {
             .disposed(by: disposedBag)
         
         outputs.stateChanged
-        .subscribe()
-        .disposed(by: disposedBag)
+            .subscribe()
+            .disposed(by: disposedBag)
     }
     
     private func render(props: Props) {
-        if renderedProps?.items != props.items {
-            data = props.items.compactMap({ DiffableBox(value: $0, identifier: $0.diffIdentifier as NSObjectProtocol, equal: ==) })
-            adapter.performUpdates(animated: true)
-        }
-        
-        if renderedProps?.isLoading != props.isLoading {
-            contentView.toggleLoading(on: props.isLoading)
-        }
+        data = props.contentViewProps.items
+        adapter.performUpdates(animated: true)
         
         if let error = props.error, renderedProps?.error != error {
             errorPresenter.present(error: error, on: self)
@@ -105,7 +98,7 @@ final class NewsParentController: UIViewController {
     }
 }
 
-extension NewsParentController: ListAdapterDataSource {
+extension NewsListViewController: ListAdapterDataSource {
     func objects(for listAdapter: ListAdapter) -> [ListDiffable] {
         return data
     }
@@ -124,7 +117,7 @@ extension NewsParentController: ListAdapterDataSource {
     }
 }
 
-extension NewsParentController: IGListAdapterDelegate {
+extension NewsListViewController: IGListAdapterDelegate {
     func listAdapter(_ listAdapter: ListAdapter, willDisplay object: Any, at index: Int) {
         willDisplayCellAt.onNext(index)
     }

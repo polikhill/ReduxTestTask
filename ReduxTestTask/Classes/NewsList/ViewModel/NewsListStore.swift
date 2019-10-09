@@ -67,7 +67,7 @@ extension NewsList {
             newState.error = nil
             
         default:
-            fatalError("New Action was added.")
+            break
         }
         
         return newState

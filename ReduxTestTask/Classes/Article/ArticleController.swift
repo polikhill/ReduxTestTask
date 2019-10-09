@@ -26,7 +26,7 @@ final class ArticleController: UIViewController {
     }
 }
 
-func makeArticleProps(from article: Article) -> ArticleView.Props {
+private func makeArticleProps(from article: Article) -> ArticleView.Props {
     return ArticleView.Props(
         title: article.author,
         subtitle: article.title,

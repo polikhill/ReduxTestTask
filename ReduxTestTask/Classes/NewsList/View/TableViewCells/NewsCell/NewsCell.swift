@@ -49,6 +49,7 @@ final class NewsCell: BaseCollectionViewCell, NibInitializable, ReusableCell {
     override func prepareForReuse() {
         super.prepareForReuse()
         backgroundImageView.image = nil
+        backgroundImageView.kf.cancelDownloadTask()
     }
     
     private func render(props: Props) {

@@ -8,10 +8,11 @@
 
 import Foundation
 
-struct NetworkResponse: Decodable {
+struct NetworkArticleResponse: Decodable {
     let status: String
     let articles: [NetworkArticle]
 }
+
 struct NetworkArticle: Decodable {
     let author: String?
     let title: String
