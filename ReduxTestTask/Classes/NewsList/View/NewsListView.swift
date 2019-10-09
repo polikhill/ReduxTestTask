@@ -113,7 +113,6 @@ extension NewsListView: ListAdapterDataSource {
 extension NewsListView: IGListAdapterDelegate {
     func listAdapter(_ listAdapter: ListAdapter, willDisplay object: Any, at index: Int) {
         willDisplayCellAt.onNext(index)
-        print(index)
     }
     
     func listAdapter(_ listAdapter: ListAdapter, didEndDisplaying object: Any, at index: Int) { }

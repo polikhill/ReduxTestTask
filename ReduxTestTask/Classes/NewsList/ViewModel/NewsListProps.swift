@@ -14,7 +14,7 @@ extension NewsList {
         return NewsListViewController.Props(
             contentViewProps: NewsListView.ContentViewProps(
                 isLoading: state.isLoading,
-                items: state.fetchedNews.compactMap { makeNewsCellDiffableProps(from: $0) }),
+                items: state.fetchedNews.map { makeNewsCellDiffableProps(from: $0) }),
             error: state.error?.localizedDescription
         )
     }

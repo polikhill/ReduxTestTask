@@ -25,6 +25,7 @@
 		DD29116823438601009D56C8 /* AppConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD29116723438601009D56C8 /* AppConstants.swift */; };
 		DD291173234393ED009D56C8 /* FormatterExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD291172234393ED009D56C8 /* FormatterExtensions.swift */; };
 		DD29117723439540009D56C8 /* AppStrings.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD29117623439540009D56C8 /* AppStrings.swift */; };
+		DD67A33F234DDC15003F0257 /* IGListKitExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD67A33E234DDC15003F0257 /* IGListKitExtensions.swift */; };
 		DD83BFF12343969C0092338A /* NewsListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD83BFF02343969C0092338A /* NewsListView.swift */; };
 		DD83BFF32343991E0092338A /* UITableViewExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD83BFF22343991E0092338A /* UITableViewExtensions.swift */; };
 		DD83BFF62343999D0092338A /* NibInitializable.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD83BFF52343999D0092338A /* NibInitializable.swift */; };
@@ -82,6 +83,7 @@
 		DD32B1452343840000FC8C6B /* ReactiveMoya.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ReactiveMoya.framework; path = Carthage/Build/iOS/ReactiveMoya.framework; sourceTree = "<group>"; };
 		DD32B1462343840000FC8C6B /* RxMoya.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = RxMoya.framework; path = Carthage/Build/iOS/RxMoya.framework; sourceTree = "<group>"; };
 		DD32B14A234384E400FC8C6B /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Platforms/iPhoneOS.platform/Developer/Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
+		DD67A33E234DDC15003F0257 /* IGListKitExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IGListKitExtensions.swift; sourceTree = "<group>"; };
 		DD83BFF02343969C0092338A /* NewsListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewsListView.swift; sourceTree = "<group>"; };
 		DD83BFF22343991E0092338A /* UITableViewExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UITableViewExtensions.swift; sourceTree = "<group>"; };
 		DD83BFF52343999D0092338A /* NibInitializable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NibInitializable.swift; sourceTree = "<group>"; };
@@ -325,10 +327,11 @@
 		DD291171234393B7009D56C8 /* Extensions */ = {
 			isa = PBXGroup;
 			children = (
-				DD0A8B1E2347539B00BE303B /* UICollectionViewExtensions.swift */,
 				DD291172234393ED009D56C8 /* FormatterExtensions.swift */,
-				DD83BFF22343991E0092338A /* UITableViewExtensions.swift */,
+				DD67A33E234DDC15003F0257 /* IGListKitExtensions.swift */,
 				DDB20D1C2344F3FD00A50A76 /* RxSwiftExtensions.swift */,
+				DD0A8B1E2347539B00BE303B /* UICollectionViewExtensions.swift */,
+				DD83BFF22343991E0092338A /* UITableViewExtensions.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -600,6 +603,7 @@
 				DDB20D1B2344F35D00A50A76 /* ErrorPresenter.swift in Sources */,
 				DD83BFF62343999D0092338A /* NibInitializable.swift in Sources */,
 				DD0A8B21234753C500BE303B /* BaseCollectionViewCell.swift in Sources */,
+				DD67A33F234DDC15003F0257 /* IGListKitExtensions.swift in Sources */,
 				DD291173234393ED009D56C8 /* FormatterExtensions.swift in Sources */,
 				DD291165234385D0009D56C8 /* ApiResponse.swift in Sources */,
 				DD27356523434F5B00607035 /* AppDelegate.swift in Sources */,

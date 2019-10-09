@@ -38,8 +38,7 @@ extension NewsListController {
         cellForViewModel viewModel: Any, at index: Int
         ) -> UICollectionViewCell & ListBindable {
 
-        
-        guard let cell = collectionContext?.dequeueReusableCell(withNibName: "\(NewsCell.self)", bundle: nil, for: self, at: index) as? NewsCell else { fatalError() }
+        guard let cell = collectionContext?.cell(cellType: NewsCell.self, index: index, for: self) else { fatalError() }
         return cell
     }
     
