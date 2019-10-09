@@ -25,10 +25,20 @@ final class NewsListView: UIView {
     private let items = PublishSubject<[NewsCell.Props]>()
     private let disposeBag = DisposeBag()
     private var renderedProps: ContentViewProps?
+    fileprivate let willDisplayCellAt = PublishSubject<Int>()
+    fileprivate let itemSelectedAt = PublishSubject<Int>()
+    
+    private lazy var adapter: ListAdapter = {
+        return ListAdapter(updater: ListAdapterUpdater(), viewController: nil)
+    }()
+
     
     override init(frame: CGRect) {
         super.init(frame: frame)
         setup()
+        adapter.collectionView = collectionView
+        adapter.dataSource = self
+        adapter.delegate = self
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -82,11 +92,45 @@ final class NewsListView: UIView {
         }
         
         renderedProps = props
+        adapter.performUpdates(animated: true)
     }
+}
+
+extension NewsListView: ListAdapterDataSource {
+    func objects(for listAdapter: ListAdapter) -> [ListDiffable] {
+        return renderedProps?.items ?? []
+    }
+    
+    func listAdapter(_ listAdapter: ListAdapter, sectionControllerFor object: Any) -> ListSectionController {
+        let newslistController = NewsListController()
+        newslistController.itemSelectedAt
+            .bind(to: itemSelectedAt)
+            .disposed(by: disposeBag)
+        
+        return newslistController
+    }
+    
+    func emptyView(for listAdapter: ListAdapter) -> UIView? {
+        return nil
+    }
+}
+
+extension NewsListView: IGListAdapterDelegate {
+    func listAdapter(_ listAdapter: ListAdapter, willDisplay object: Any, at index: Int) {
+        willDisplayCellAt.onNext(index)
+    }
+    
+    func listAdapter(_ listAdapter: ListAdapter, didEndDisplaying object: Any, at index: Int) { }
 }
 
 extension Reactive where Base: NewsListView {    
     var pullToRefresh: Observable<Void> {
         return base.refreshControl.rx.controlEvent(.valueChanged).asObservable()
+    }
+    var cellSelected: Observable<Int> {
+        return base.itemSelectedAt.asObservable()
+    }
+    var willDisplayCell: Observable<Int> {
+        return base.willDisplayCellAt.asObservable()
     }
 }

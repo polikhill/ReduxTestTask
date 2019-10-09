@@ -22,12 +22,6 @@ final class NewsListViewController: UIViewController {
     private let errorPresenter = ErrorPresenter()
     private var renderedProps: Props?
     private let disposedBag = DisposeBag()
-    private let willDisplayCellAt = PublishSubject<Int>()
-    private let itemSelectedAt = PublishSubject<Int>()
-    
-    private lazy var adapter: ListAdapter = {
-        return ListAdapter(updater: ListAdapterUpdater(), viewController: self)
-    }()
     
     init(service: NewsServiceProtocol) {
         viewModel = NewsList.NewsListViewModel(service: service)
@@ -44,9 +38,6 @@ final class NewsListViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        adapter.collectionView = contentView.collectionView
-        adapter.dataSource = self
-        adapter.delegate = self
         setupBindigns()
     }
     
@@ -55,8 +46,8 @@ final class NewsListViewController: UIViewController {
             viewWillAppear: rx.methodInvoked(#selector(viewWillAppear(_:))).voidValues(),
             pullToRefresh: contentView.rx.pullToRefresh,
             dismissError: errorPresenter.dismissed,
-            willDisplayCellAt: willDisplayCellAt.asObservable(),
-            cellSelectedAt: itemSelectedAt.asObservable()
+            willDisplayCellAt: contentView.rx.willDisplayCell,
+            cellSelectedAt: contentView.rx.cellSelected
         )
         
         let outputs = viewModel.makeOutputs(from: inputs)
@@ -85,39 +76,12 @@ final class NewsListViewController: UIViewController {
             errorPresenter.present(error: error, on: self)
         }
         
+        contentView.render(props.contentViewProps)
         renderedProps = props
-        adapter.performUpdates(animated: true)
     }
     
     private func showArticle(_ article: Article) {
         let articleController = ArticleController(article: article)
         navigationController?.pushViewController(articleController, animated: true)
     }
-}
-
-extension NewsListViewController: ListAdapterDataSource {
-    func objects(for listAdapter: ListAdapter) -> [ListDiffable] {
-        return renderedProps?.contentViewProps.items ?? []
-    }
-    
-    func listAdapter(_ listAdapter: ListAdapter, sectionControllerFor object: Any) -> ListSectionController {
-        let newslistController = NewsListController()
-        newslistController.itemSelectedAt
-            .bind(to: itemSelectedAt)
-            .disposed(by: disposedBag)
-        
-        return newslistController
-    }
-    
-    func emptyView(for listAdapter: ListAdapter) -> UIView? {
-        return nil
-    }
-}
-
-extension NewsListViewController: IGListAdapterDelegate {
-    func listAdapter(_ listAdapter: ListAdapter, willDisplay object: Any, at index: Int) {
-        willDisplayCellAt.onNext(index)
-    }
-    
-    func listAdapter(_ listAdapter: ListAdapter, didEndDisplaying object: Any, at index: Int) { }
 }

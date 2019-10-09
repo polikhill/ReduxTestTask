@@ -67,8 +67,6 @@ extension NewsList {
     }
     
     static func makeShowArticleMiddleware(showArticle: PublishSubject<Article>) -> Store.Middleware {
-        let disposeBag = DisposeBag()
-        
         return Store.makeMiddleware { dispatch, getStore, next, action in
             next(action)
             let store = getStore()
@@ -79,15 +77,7 @@ extension NewsList {
             }
             
             let article = store.fetchedNews[action.index]
-            
-            Observable
-                .just(article)
-                .do(onNext: { _ in showArticle.onNext(article) })
-                .map ({ article -> Action in
-                    return ShowArticle(article: article)
-                })
-                .subscribe(onNext: dispatch)
-                .disposed(by: disposeBag)
+            showArticle.onNext(article)
         }
     }
 }
