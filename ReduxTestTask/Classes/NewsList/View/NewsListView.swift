@@ -32,7 +32,6 @@ final class NewsListView: UIView {
         return ListAdapter(updater: ListAdapterUpdater(), viewController: nil)
     }()
 
-    
     override init(frame: CGRect) {
         super.init(frame: frame)
         setup()
@@ -75,14 +74,10 @@ final class NewsListView: UIView {
     
     private func toggleLoading(on: Bool) {
         if on {
-            DispatchQueue.main.async {
-                self.loader.startAnimating()
-            }
+            loader.startAnimating()
         } else {
-            DispatchQueue.main.async {
-                self.loader.stopAnimating()
-                self.refreshControl.endRefreshing()
-            }
+            loader.stopAnimating()
+            refreshControl.endRefreshing()
         }
     }
     
@@ -118,6 +113,7 @@ extension NewsListView: ListAdapterDataSource {
 extension NewsListView: IGListAdapterDelegate {
     func listAdapter(_ listAdapter: ListAdapter, willDisplay object: Any, at index: Int) {
         willDisplayCellAt.onNext(index)
+        print(index)
     }
     
     func listAdapter(_ listAdapter: ListAdapter, didEndDisplaying object: Any, at index: Int) { }
