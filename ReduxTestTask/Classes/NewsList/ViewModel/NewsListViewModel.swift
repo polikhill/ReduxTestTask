@@ -61,19 +61,6 @@ extension NewsList {
             let stateChanges = actionCreator.actions
                 .do(onNext: store.dispatch)
                 .voidValues()
-    
-        
-//            let article = store.state
-////                .debounce(0.3, scheduler: MainScheduler.instance)
-//                .withLatestFrom(actionCreator.actions)
-//                .flatMap({ action -> Observable<Article> in
-//                    guard let action = action as? ShowArticle else {
-//                        return Observable.empty()
-//                    }
-//                    return Observable
-//                        .just(action.article)
-//                        .ignoreNil()
-//                })
             
             return Outputs(
                 props: props,

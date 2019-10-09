@@ -92,8 +92,8 @@ extension NewsList {
             
             Observable
                 .just(article)
+                .do(onNext: { _ in showArticle.onNext(article) })
                 .map ({ article -> Action in
-                    showArticle.onNext(article)
                     return ShowArticle(article: article)
                 })
                 .subscribe(onNext: dispatch)

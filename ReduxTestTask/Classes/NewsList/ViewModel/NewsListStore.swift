@@ -62,12 +62,6 @@ extension NewsList {
         case let action as LoadNewsError:
             newState.error = action.error
             newState.isLoading = false
-            
-        case is SelectedCell:
-            break
-            
-        case is ShowArticle:
-            break
 
         case is DismissError:
             newState.error = nil
