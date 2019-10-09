@@ -14,7 +14,7 @@ extension NewsList {
     final class ActionCreator {
         let actions: Observable<Action>
         
-        init(inputs: NewsListViewModel.Inputs, newsService: NewsServiceProtocol) {
+        init(inputs: NewsListViewModel.Inputs) {
             let dismissErrorAction = inputs.dismissError
                 .map ({ _ -> Action in
                     return DismissError()

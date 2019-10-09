@@ -8,9 +8,10 @@
 
 import UIKit
 import RxSwift
+import IGListKit
 
 final class NewsListViewController: UIViewController {
-
+    
     struct Props {
         let contentViewProps: NewsListView.ContentViewProps
         let error: String?
@@ -52,11 +53,11 @@ final class NewsListViewController: UIViewController {
         let outputs = viewModel.makeOutputs(from: inputs)
         
         outputs.props
-        .observeForUI()
+            .observeForUI()
             .subscribe(onNext: { [unowned self ] props in
                 self.render(props: props)
             })
-        .disposed(by: disposedBag)
+            .disposed(by: disposedBag)
         
         outputs.showArticle
             .observeForUI()
@@ -66,17 +67,16 @@ final class NewsListViewController: UIViewController {
             .disposed(by: disposedBag)
         
         outputs.stateChanged
-        .subscribe()
-        .disposed(by: disposedBag)
+            .subscribe()
+            .disposed(by: disposedBag)
     }
     
     private func render(props: Props) {
-        contentView.render(props.contentViewProps)
-        
         if let error = props.error, renderedProps?.error != error {
             errorPresenter.present(error: error, on: self)
         }
         
+        contentView.render(props.contentViewProps)
         renderedProps = props
     }
     

@@ -1,3 +1,4 @@
 github "ReactiveX/RxSwift"
 github "Moya/Moya"
 github "onevcat/Kingfisher" == 5.7.1 
+github "Instagram/IGListKit" ~> 3.4.0

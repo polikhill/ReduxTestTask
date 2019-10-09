@@ -9,23 +9,35 @@
 import UIKit
 import RxSwift
 import RxCocoa
+import IGListKit
 
 final class NewsListView: UIView {
-
+    
     struct ContentViewProps {
         let isLoading: Bool
-        let items: [NewsCell.Props]
+        let items: [DiffableBox<NewsCell.Props>]
     }
     
-    fileprivate let tableView = UITableView()
+    let collectionView = UICollectionView(frame: .zero, collectionViewLayout: UICollectionViewFlowLayout())
+    private let loader = UIActivityIndicatorView(style: .gray)
     fileprivate let refreshControl = UIRefreshControl()
+    fileprivate let tableView = UITableView()
     private let items = PublishSubject<[NewsCell.Props]>()
     private let disposeBag = DisposeBag()
     private var renderedProps: ContentViewProps?
+    fileprivate let willDisplayCellAt = PublishSubject<Int>()
+    fileprivate let itemSelectedAt = PublishSubject<Int>()
     
+    private lazy var adapter: ListAdapter = {
+        return ListAdapter(updater: ListAdapterUpdater(), viewController: nil)
+    }()
+
     override init(frame: CGRect) {
         super.init(frame: frame)
         setup()
+        adapter.collectionView = collectionView
+        adapter.dataSource = self
+        adapter.delegate = self
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -33,25 +45,38 @@ final class NewsListView: UIView {
     }
     
     private func setup() {
-        tableView.addSubview(refreshControl)
-        tableView.register(NewsCell.self)
-        tableView.rowHeight = NewsCell.designedHeight
-        tableView.estimatedRowHeight = NewsCell.designedHeight
+        collectionView.refreshControl = refreshControl
+        collectionView.register(cellType: NewsCell.self)
+        collectionView.backgroundColor = .white
         
-        addSubview(tableView)
-        tableView.translatesAutoresizingMaskIntoConstraints = false
+        addSubview(collectionView)
+        collectionView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            tableView.leftAnchor.constraint(equalTo: leftAnchor),
-            tableView.topAnchor.constraint(equalTo: topAnchor),
-            tableView.rightAnchor.constraint(equalTo: rightAnchor),
-            tableView.bottomAnchor.constraint(equalTo: bottomAnchor)
+            collectionView.leftAnchor.constraint(equalTo: leftAnchor),
+            collectionView.topAnchor.constraint(equalTo: topAnchor),
+            collectionView.rightAnchor.constraint(equalTo: rightAnchor),
+            collectionView.bottomAnchor.constraint(equalTo: bottomAnchor)
             ])
+        
+        let collectionLayout = UICollectionViewFlowLayout()
+        collectionLayout.scrollDirection = .vertical
+        collectionLayout.minimumInteritemSpacing = NewsCell.spaceBetweeenCells
+        collectionLayout.minimumLineSpacing = NewsCell.spaceBetweeenCells
+        collectionView.collectionViewLayout = collectionLayout
+    }
+    
+    private func setupLoader() {
+        loader.isHidden = true
+        loader.hidesWhenStopped = true
+        addSubview(loader)
+        loader.center = center
     }
     
     private func toggleLoading(on: Bool) {
         if on {
-            refreshControl.beginRefreshing()
+            loader.startAnimating()
         } else {
+            loader.stopAnimating()
             refreshControl.endRefreshing()
         }
     }
@@ -61,27 +86,46 @@ final class NewsListView: UIView {
             toggleLoading(on: props.isLoading)
         }
         
-        if props.items != renderedProps?.items {
-        Observable.just(props.items)
-            .bind(to: tableView.rx.items(cellIdentifier: NewsCell.identifier, cellType: NewsCell.self)) { _, model, cell in
-                cell.render(props: model)
-            }
-            .disposed(by: disposeBag)
-        }
         renderedProps = props
+        adapter.performUpdates(animated: true)
     }
+}
+
+extension NewsListView: ListAdapterDataSource {
+    func objects(for listAdapter: ListAdapter) -> [ListDiffable] {
+        return renderedProps?.items ?? []
+    }
+    
+    func listAdapter(_ listAdapter: ListAdapter, sectionControllerFor object: Any) -> ListSectionController {
+        let newslistController = NewsListController()
+        newslistController.itemSelectedAt
+            .bind(to: itemSelectedAt)
+            .disposed(by: disposeBag)
+        
+        return newslistController
+    }
+    
+    func emptyView(for listAdapter: ListAdapter) -> UIView? {
+        return nil
+    }
+}
+
+extension NewsListView: IGListAdapterDelegate {
+    func listAdapter(_ listAdapter: ListAdapter, willDisplay object: Any, at index: Int) {
+        willDisplayCellAt.onNext(index)
+    }
+    
+    func listAdapter(_ listAdapter: ListAdapter, didEndDisplaying object: Any, at index: Int) { }
 }
 
 extension Reactive where Base: NewsListView {    
     var pullToRefresh: Observable<Void> {
         return base.refreshControl.rx.controlEvent(.valueChanged).asObservable()
     }
-    
-    var willDisplayCell: Observable<Int> {
-        return base.tableView.rx.willDisplayCell.asObservable().map({$0.indexPath.row})
-    }
-    
     var cellSelected: Observable<Int> {
-        return base.tableView.rx.itemSelected.asObservable().map({$0.row})
+        return base.itemSelectedAt.asObservable()
+    }
+    var willDisplayCell: Observable<Int> {
+        return base.willDisplayCellAt.asObservable()
     }
 }
